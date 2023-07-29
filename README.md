@@ -40,6 +40,94 @@ _ By following clear conventions, make it easier for other developers to integra
 
 ## Part 2: Setting up Node and Express
 
+### 2.1 Setting up the development environment
+
+Prerequisite: you should have Node and a package manager on your operating system. To install, please visit the guide [here](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/development_environment#installing_node)
+
+#### 2.2.1 Create a `package.json` file for your application
+
+Use the `npm init` command to create a package.json file for your application. This command prompts you for a number of things, including the name and version of your application and the name of the initial entry point file (by default this is index.js). For now, just accept the defaults:
+
+```
+// npm
+npm init
+
+// yarn
+yarn init
+
+// pnpm
+pnpm init
+```
+
+#### 2.2.2 Install Express
+
+```
+// npm
+npm install express
+
+// yarn
+yarn add express
+
+// pnpm
+pnpm add express
+```
+
+After running the command, `express` should appear under `dependencies` in your `package.json`
+
+```
+code example
+```
+
+#### [Optional] Install `nodemon`
+
+```
+// npm
+npm install nodemon
+
+// yarn
+yarn add nodemon
+
+// pnpm
+pnpm add nodemon
+```
+
+Add to the scripts in `package.json`
+
+```
+"dev": "nodemon index.js"
+```
+
+### 2.2 Minimal setup of an Express server
+
+#### 2.2.1 
+
+```
+const express = require('express') // // import modules/libraries with require()
+
+const app = express() // intialize express app
+
+const PORT = 8080
+
+app.get('/', (req, res) => { // a HTTP request consists of path (i.e. /), HTTP action (i.e. GET)
+  res.json({ message: 'Hello World' }) // the server send back the respond  in the json format through res.json()
+})
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}...`)
+})
+```
+
+#### 2.2.2 Start the server
+
+To start the server, run the following command:
+
+```
+node index.js
+```
+
+You should be able to see `Listening on port 3000...` in the console.
+
+
 ## Part 3: Cross-origin resource sharing (CORS) 
 
 ### Same-origin policy 
@@ -65,3 +153,9 @@ Ideally, in the production environment, we probably want to specifically only al
 
 
 ## Part 4: 
+
+### Initial directory structure
+
+#### Middlewares
+
+#### Controllers
