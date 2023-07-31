@@ -116,6 +116,7 @@ yarn add nodemon
 // pnpm
 pnpm add nodemon
 ```
+
 #### 2.2.5 Add to the scripts in `package.json`
 
 ```js
@@ -134,7 +135,8 @@ const app = express() // intialize express app
 const PORT = 8080
 
 // optional
-app.get('/', (req, res) => { // a HTTP request consists of path (i.e. /), HTTP action (i.e. GET)
+app.get('/', (req, res) => {
+  // a HTTP request consists of path (i.e. /), HTTP action (i.e. GET)
   res.json({ message: 'Hello World' }) // the server send back the respond  in the json format through res.json()
 })
 
@@ -142,20 +144,23 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}...`)
 })
 ```
+
 To start the server, run the following command:
 
 ```
-npm start 
+npm start
 ```
 
 You should be able to see `Server is running on port 8080...` in the console.
 
-If you visit `localhost:8080` you should be able to see  "Hello World".
+If you visit `localhost:8080` you should be able to see "Hello World".
 
 ## Part 3: Set up MongoDB
 
 ### 3.1 Setup MongoDB (Atlas or Local)
+
 Follow these guide to set up MongoDB:
+
 - MongoDB Atlas: [here](https://www.mongodb.com/docs/atlas/tutorial/create-atlas-account/)
 
 - MongoDB Local: [here](https://www.prisma.io/dataguide/mongodb/setting-up-a-local-mongodb-database)
@@ -311,14 +316,13 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}...`)
 })
-
 ```
 
 ## Part 5: REST API
 
 ### 5.1 Initial directory structure
 
-Here, we will briefly go over our backend structure. 
+Here, we will briefly go over our backend structure.
 
 ```
 ├── backend
@@ -332,16 +336,136 @@ Here, we will briefly go over our backend structure.
 - `config`: this is where we intialize our mongoDB
 - `controllers`: define all the controllers needed for the application
 - `middlewares`: contains our defined middlewares
-- `models`:  data models required for the application
+- `models`: data models required for the application
 - `routes`: a folder for each logical set of routes
 
 This visualization summarizes our backend project structure:
 
 ![backend-structure](https://github.com/Punpun1643/CS3219-labs/assets/60144099/7abd018e-9807-4a96-91ee-613d18b3c602)
 
+### 5.3 `GET` - get all addresses
+
+#### 5.3.1 Define the address model
+
+An address will have 2 attributes: address title, and address description. We need to define this address model.
+
+In the `models` directory, create `addressModel.js` with the following:
+
+```js
+// addressModel.js
+
+const mongoose = require('mongoose')
+
+const addressSchema = mongoose.Schema({
+  title: {
+    type: String,
+    required: [true, 'Please enter address title'],
+  },
+  description: {
+    type: String,
+    required: [true, 'Please enter address description'],
+  },
+})
+
+module.exports = mongoose.model('Address', addressSchema)
+```
+
+#### 5.3.2 Define API routes
+
+Our api endpoints for addresses will look something like this: `/api/addresses/...` e.g. `/api/addresses/:id`
+
+Before definding the specific endpoints in the `routes` directory, we can add the following to `index.js`:
+
+```js
+// index.js
+
+const express = require('express')
+
+const dotenv = require('dotenv').config()
+const connectDB = require('./config/db')
+
+const cors = require('cors')
+
+const port = process.env.PORT || 8080
+
+connectDB()
+
+const app = express()
+
+app.use(cors())
+app.use(express.json()) // parse JSON data available in request body
+app.use(express.urlencoded({ extended: false })) // parse URL-encoded data available in request body
+
+app.use('/api/addresses', require('./routes/addressRoutes')) // add
+
+// optional
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello World' })
+})
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}...`)
+})
+```
+
+In the `routes` directory, create `addressRoutes.js`, this is where we will define the specific enpoints.
+
+```js
+// addressRoutes.js
+
+const express = require('express')
+const router = express.Router()
+
+router.route('/')
+
+module.exports = router
+```
+
+#### 5.3.3 `getAddresses` controller - get all addresses
+
+In the `controllers` directory, create `addressController.js`. Here, we will define a controller that deals with getting all the addresses from our database:
+
+```js
+// addressController.js
+
+const Address = require('../models/addressModel')
+
+// @desc    Get all addresses
+// @route   GET /api/addresses
+// @access  Public
+const getAddresses = async (req, res) => {
+  const addresses = await Address.find({})
+
+  res.status(200).json(addresses)
+}
+
+module.exports = { getAddresses }
+```
+
+In `addressRoutes.js`, we can use `getAddresses` as follow:
+
+```js
+// addressRoutes.js
+
+const express = require('express')
+const router = express.Router()
+
+const {
+    getAddresses
+  } = require('../controllers/addressController')
+
+router.route('/').get(getAddresses) // here
+
+module.exports = router
+
+```
+
+This means that the endpoint to get all addresses is `/api/addresses/`
+
+To test whether the endpoint work correctly, you can use postman and make a `GET` request to `localhost:8080/api/addresses/`
+
+The output should be as follow if there is no address object in the DB:
 
 
-
-### 5.2  `GET` - Get all addresses
-
+However, if you were to manually add an address object into the DB, it could look as follow:
 
