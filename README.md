@@ -475,11 +475,59 @@ However, if you were to manually add an address object into the DB, it could loo
 
 Similar to `GET` request, we can implement the creation of an address as follow:
 
+```js
+// addressRoutes.js
+
+const express = require('express')
+const router = express.Router()
+
+const { getAddresses, addAddress } = require('../controllers/addressController')
+
+router.route('/').get(getAddresses).post(addAddress)
+
+module.exports = router
 ```
 
+```js
+// addressController.js
+
+...
+
+// @desc    Add an address
+// @route   POST /api/addresses
+// @access  Public
+const addAddress = async (req, res) => {
+  const { title, description } = req.body
+
+  if (!title || !description) {
+    return res.status(400).json({ message: 'Please enter all fields.' })
+  }
+
+  // catch exception when fields are missing
+  try {
+    const address = await Address.create({
+      title,
+      description,
+    })
+
+    res.status(201).json({
+      _id: address._id,
+      title: address.title,
+      description: address.description,
+    })
+  } catch (error) {
+    res.status(400).json({ message: 'Invalid address data.' })
+  }
+}
+
+module.exports = { getAddresses, addAddress }
 ```
-
-
-To handle exception when invalid ...:
 
 You could also add more checks e.g. prevent adding addresses with the same name etc.
+
+### 5.5 `DELETE` - delete an address
+
+
+
+### 5.6 `PUT` - update an address
+
