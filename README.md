@@ -7,7 +7,7 @@
 
 ### Intro and setting up
 
-- Part 1: blah blah
+- Part 1: A brief overview of REST API
 - Part 2: ...
 - Part 3: ...
 
@@ -457,7 +457,6 @@ const {
 router.route('/').get(getAddresses) // here
 
 module.exports = router
-
 ```
 
 This means that the endpoint to get all addresses is `/api/addresses/`
@@ -471,3 +470,16 @@ The output should be as follow if there is no address object in the DB:
 However, if you were to manually add an address object into the DB, it could look as follow:
 
 ![8F778A9A-2511-4588-BC36-844F25992B1C](https://github.com/Punpun1643/CS3219-labs/assets/60144099/fee6ff86-f10d-4ce8-b019-9715de4d44dc)
+
+### 5.4 `POST` - create an address
+
+Similar to `GET` request, we can implement the creation of an address as follow:
+
+```
+
+```
+
+
+To handle exception when invalid ...:
+
+You could also add more checks e.g. prevent adding addresses with the same name etc.
