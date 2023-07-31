@@ -337,6 +337,7 @@ Here, we will briefly go over our backend structure.
 
 This visualization summarizes our backend project structure:
 
+![backend-structure](https://github.com/Punpun1643/CS3219-labs/assets/60144099/7abd018e-9807-4a96-91ee-613d18b3c602)
 
 
 
