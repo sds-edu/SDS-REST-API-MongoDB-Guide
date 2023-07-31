@@ -466,6 +466,8 @@ To test whether the endpoint work correctly, you can use postman and make a `GET
 
 The output should be as follow if there is no address object in the DB:
 
+![2C62B77F-267D-4EEC-9D84-ABC86CD7C314](https://github.com/Punpun1643/CS3219-labs/assets/60144099/a6ada0a4-e38f-48cf-8b0a-11f8ceb3b200)
 
 However, if you were to manually add an address object into the DB, it could look as follow:
 
+![8F778A9A-2511-4588-BC36-844F25992B1C](https://github.com/Punpun1643/CS3219-labs/assets/60144099/fee6ff86-f10d-4ce8-b019-9715de4d44dc)
