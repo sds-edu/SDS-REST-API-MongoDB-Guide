@@ -314,10 +314,33 @@ app.listen(port, () => {
 
 ```
 
-## Part 4:
+## Part 5: REST API
 
-### Initial directory structure
+### 5.1 Initial directory structure
 
-### Middlewares
+Here, we will briefly go over our backend structure. 
 
-### Controllers
+```
+├── backend
+│   ├── config
+│   ├── controllers
+│   ├── middlewares
+│   ├── models
+│   └── routes
+```
+
+- `config`: this is where we intialize our mongoDB
+- `controllers`: define all the controllers needed for the application
+- `middlewares`: contains our defined middlewares
+- `models`:  data models required for the application
+- `routes`: a folder for each logical set of routes
+
+This visualization summarizes our backend project structure:
+
+
+
+
+
+### 5.2  `GET` - Get all addresses
+
+
