@@ -527,7 +527,7 @@ You could also add more checks e.g. prevent adding addresses with the same name 
 
 To test the endpoint, you can try making a `POST` request to the endpoint as follow:
 
-
+![6F2F1EA4-D574-4336-8D8F-E904F9DB105E](https://github.com/Punpun1643/CS3219-labs/assets/60144099/19091911-6134-4c22-a4e3-cda52ed9fd5c)
 
 ### 5.5 `DELETE` - delete an address
 
@@ -577,6 +577,7 @@ const deleteGoal = asyncHandler(async (req, res) => {
 
 To test the endpoint, you can try making a `DELETE` request as follow:
 
+![20F86C6A-D013-4C0F-8C7D-284A1AAF66EF_1_105_c](https://github.com/Punpun1643/CS3219-labs/assets/60144099/66de1d0a-6cee-478c-ab3e-de90cab06d50)
 
 
 ### 5.6 `PUT` - update an address
@@ -636,8 +637,7 @@ const editAddress = async (req, res) => {
 
 To test the endpoint, you can try making a `PUT` request as follow:
 
-
-
+![CF3E013F-AF27-4A88-8DBB-34D5690A0A8F_1_105_c](https://github.com/Punpun1643/CS3219-labs/assets/60144099/de6b0169-5437-4304-80d8-bb4b657ea85a)
 
 ## Part 6: Integration with the frontend
 
