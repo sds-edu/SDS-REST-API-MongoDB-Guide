@@ -525,9 +525,124 @@ module.exports = { getAddresses, addAddress }
 
 You could also add more checks e.g. prevent adding addresses with the same name etc.
 
+To test the endpoint, you can try making a `POST` request to the endpoint as follow:
+
+
+
 ### 5.5 `DELETE` - delete an address
+
+```js
+// addressRoutes.js
+
+const express = require('express')
+const router = express.Router()
+
+const {
+  getAddresses,
+  addAddress,
+  deleteAddress,
+} = require('../controllers/addressController')
+
+router.route('/').get(getAddresses).post(addAddress)
+router.route('/:id').delete(deleteAddress) // add 
+
+module.exports = router
+```
+
+```js
+// addressController.js
+...
+
+// @desc Delete goal
+// @route DELETE /api/goals/:id
+// @access Private
+const deleteGoal = asyncHandler(async (req, res) => {
+  const goal = await Goal.findById(req.params.id)
+
+  if (!goal) {
+    res.status(400)
+    throw new Error('Goal not found!')
+  }
+
+  if (!req.user) {
+    res.status(401)
+    throw new Error('User not authorized!')
+  }
+
+  await goal.deleteOne()
+
+  res.status(200).json({ id: req.params.id })
+})
+```
+
+To test the endpoint, you can try making a `DELETE` request as follow:
 
 
 
 ### 5.6 `PUT` - update an address
 
+```js
+// addressRoute.js
+
+const express = require('express')
+const router = express.Router()
+
+const {
+  getAddresses,
+  addAddress,
+  deleteAddress,
+  editAddress,
+} = require('../controllers/addressController')
+
+router.route('/').get(getAddresses).post(addAddress)
+router.route('/:id').delete(deleteAddress).put(editAddress)
+
+module.exports = router
+
+```
+
+```js
+// addressController.js
+
+// @desc Edit an address
+// @route PUT /api/addresses/:id
+// @access Public
+
+const editAddress = async (req, res) => {
+  const { title, description } = req.body
+
+  if (!title || !description) {
+    return res.status(400).json({ message: 'Please enter all fields.' })
+  }
+
+  try {
+    const address = await Address.findById(req.params.id)
+
+    address.title = title
+    address.description = description
+
+    await address.save()
+
+    res.status(201).json({
+      _id: address._id,
+      title: address.title,
+      description: address.description,
+    })
+  } catch (error) {
+    res.status(400).json({ message: 'Invalid address data.' })
+  }
+}
+```
+
+To test the endpoint, you can try making a `PUT` request as follow:
+
+
+
+
+## Part 6: Integration with the frontend
+
+### 6.1 
+
+### 6.2
+
+### 6.3
