@@ -1,29 +1,27 @@
 ## What are we building?
 
-- Address book
-- blah blah blah
+
+
+- We will be building an Address Book similar to what we have done in CS2103/T. This time, instead of Java, we will implement the CRUD functionality using Javascript!
+
+- Through this, you will gain a hands-on experience implementing CRUD operations with REST API. 
 
 ## Plan
 
 ### Intro and setting up
 
 - Part 1: A brief overview of REST API
-- Part 2: ...
-- Part 3: ...
+- Part 2: Setting up Node and Express
+- Part 3: Set up MongoDB
 
 ### Structuring the backend architecture
 
-- Part 4: Controllers, middleware, models, routes
+- Part 4: Cross-origin resource sharing (CORS)
 
 ### Building our REST API endpoints
 
-- Part 4: `GET`
-
-- Part 5:
-
-- Part 6:
-
-- Part 7:
+- Part 5: REST API
+- Part 6: Integration with the frontend
 
 ## Part 1: A brief overview of REST API
 
@@ -57,7 +55,7 @@ Prerequisite:
 
 Use in the `backend` directory run `npm init` to create a package.json file for your application. This command prompts you for a number of things, including the name and version of your application and the name of the initial entry point file (by default this is index.js). For now, just accept the defaults:
 
-```
+```js
 // npm
 npm init
 
@@ -306,6 +304,13 @@ connectDB()
 
 const app = express()
 
+app.options(
+  '*',
+  cors({
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200,
+  }),
+) // add
 app.use(cors()) // add
 
 // optional
@@ -450,9 +455,7 @@ In `addressRoutes.js`, we can use `getAddresses` as follow:
 const express = require('express')
 const router = express.Router()
 
-const {
-    getAddresses
-  } = require('../controllers/addressController')
+const { getAddresses } = require('../controllers/addressController')
 
 router.route('/').get(getAddresses) // here
 
@@ -544,7 +547,7 @@ const {
 } = require('../controllers/addressController')
 
 router.route('/').get(getAddresses).post(addAddress)
-router.route('/:id').delete(deleteAddress) // add 
+router.route('/:id').delete(deleteAddress) // add
 
 module.exports = router
 ```
@@ -579,7 +582,6 @@ To test the endpoint, you can try making a `DELETE` request as follow:
 
 ![20F86C6A-D013-4C0F-8C7D-284A1AAF66EF_1_105_c](https://github.com/Punpun1643/CS3219-labs/assets/60144099/66de1d0a-6cee-478c-ab3e-de90cab06d50)
 
-
 ### 5.6 `PUT` - update an address
 
 ```js
@@ -599,7 +601,6 @@ router.route('/').get(getAddresses).post(addAddress)
 router.route('/:id').delete(deleteAddress).put(editAddress)
 
 module.exports = router
-
 ```
 
 ```js
@@ -641,8 +642,108 @@ To test the endpoint, you can try making a `PUT` request as follow:
 
 ## Part 6: Integration with the frontend
 
-### 6.1 
+### Install `axios`
 
-### 6.2
+We will use `axios` to make the HTTP requests from the frontend.
 
-### 6.3
+To install `axios`, at the root directory, run the command:
+
+```
+npm install axios
+```
+
+Remember to import it in the file where you are making requests.
+
+### 6.1 Fetch all addresses
+
+To fetch all addresses, we can make a `GET` request to `http://localhost:8080/api/addresses/` as follow:
+
+```js
+// AddressCardList.jsx
+...
+
+const [addresses, setAddresses] = useState([])
+
+useEffect(() => {
+    const fetchAddresses = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/addresses')
+        setAddresses(response.data) // Update the addresses state with the retrieved data
+      } catch (error) {
+        console.error('Error fetching addresses:', error)
+      }
+    }
+
+    fetchAddresses()
+}, [addresses])
+```
+
+### 6.2 Create an address
+
+To create an address, we can make a `POST` request to `http://localhost:8080/api/addresses/` as follow:
+
+```js
+// InputButton.jsx
+
+const onSubmit = async (data) => {
+  try {
+    await axios.post('http://localhost:8080/api/addresses', data)
+    setOpen(false)
+  } catch (error) {
+    console.error('Error creating address:', error)
+  }
+}
+```
+
+### 6.3 Delete an address
+
+To delete an address, we can make a `DELETE` request to `http://localhost:8080/api/addresses/:id` as follow:
+
+```js
+// Delete.jsx
+
+...
+
+const handleDeleteAddress = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/api/addresses/${props.address._id}`,
+      )
+    } catch (error) {
+      console.error('Error deleting address:', error)
+    }
+  }
+
+...
+
+```
+
+`handleDeleteAddress` can be used as follow:
+
+```js
+// Delete.jsx
+
+<AlertDialogAction onClick={handleDeleteAddress}>Continue</AlertDialogAction>
+```
+
+### 6.4 Edit an address
+
+To edit an address, we can make a `PUT` request to `http://localhost:8080/api/addresses/:id` as follow:
+
+```js
+// Edit.jsx
+
+const onSubmit = async (data) => {
+  try {
+    await axios.put(
+      `http://localhost:8080/api/addresses/${props.address._id}`,
+      data,
+    )
+    setOpen(false)
+  } catch (error) {
+    console.error('Error updating address:', error)
+  }
+}
+```
+
+## Resources
