@@ -27,15 +27,13 @@
 
 ### What is `REST`
 
-- Statelessness
-- Cachebility
-- How we organize our endpoints URI
-  Note: most of these are already covered by default if we use framework like Express
+- A RESTful API (Representational State Transfer API) is a web-based architectural style for designing networked applications. It uses standard HTTP methods (GET, POST, PUT, DELETE) to perform CRUD (Create, Read, Update, Delete) operations on resources represented in a stateless manner. RESTful APIs are designed to be simple, scalable, and easy to consume, making them widely used for building web services and allowing different systems to communicate and interact over the internet. They typically respond with JSON or XML data and are the backbone of modern web applications and services.
 
 ### Purpose of `REST` API
 
-- Make API more maintainable
-  \_ By following clear conventions, make it easier for other developers to integrate with your API
+- Provides a standardized way to access and manipulate resources on a server using common HTTP methods (GET, POST, PUT, DELETE). 
+
+- REST APIs allow developers to build scalable, interoperable, and stateless web services that can be consumed by various clients, such as web browsers, mobile apps, and other backend systems. They promote a simple and uniform architecture, making it easier to integrate and interact with diverse systems, and they are widely used in modern web development for building APIs that serve data and functionalities to different applications.
 
 ### `REST` conventions
 
