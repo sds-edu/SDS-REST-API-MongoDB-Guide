@@ -1,13 +1,10 @@
 ## What are we building?
 
-
-
 - We will be building an Address Book similar to what we have done in CS2103/T. This time, instead of Java, we will implement the CRUD functionality using Javascript!
 
 - Through this, you will gain a hands-on experience implementing CRUD operations with REST API.
 
 ![5E11A61D-6BAC-4269-974E-3D85946295DC](https://github.com/Punpun1643/CS3219-labs/assets/60144099/bc88876b-1df8-4835-b9d4-bd6961b3f782)
-
 
 ## Plan
 
@@ -750,3 +747,14 @@ const onSubmit = async (data) => {
 ```
 
 ## Resources
+
+### REST API
+
+- [Express web framework (Node.js/JavaScript)](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs)
+
+- [How to create a REST API with Express.js in Node.js](https://www.robinwieruch.de/node-express-server-rest-api/)
+
+## Best practices
+
+- [Best practices for REST API design](https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/)
+- [REST API Best Practices – REST Endpoint Design Examples](https://www.freecodecamp.org/news/rest-api-best-practices-rest-endpoint-design-examples/)
