@@ -4,7 +4,10 @@
 
 - We will be building an Address Book similar to what we have done in CS2103/T. This time, instead of Java, we will implement the CRUD functionality using Javascript!
 
-- Through this, you will gain a hands-on experience implementing CRUD operations with REST API. 
+- Through this, you will gain a hands-on experience implementing CRUD operations with REST API.
+
+![5E11A61D-6BAC-4269-974E-3D85946295DC](https://github.com/Punpun1643/CS3219-labs/assets/60144099/bc88876b-1df8-4835-b9d4-bd6961b3f782)
+
 
 ## Plan
 
