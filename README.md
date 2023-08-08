@@ -135,7 +135,7 @@ pnpm add nodemon
 In the `index.js` add the following lines of code:
 
 ```js
-const express = require('express') // // import modules/libraries with require()
+const express = require('express') // import modules/libraries with require()
 
 const app = express() // intialize express app
 
@@ -289,7 +289,7 @@ Note: CORS can be set up with Express relatively easily through a middleware. Th
 
 ### 4.1 Setting up CORS
 
-Ideally, in the production environment, we probably want to specifically only allow access to our backend resources from our frontend website. However, for ease of development purposes, we will allow access from all origin for now.
+Ideally, in the production environment, we probably want to specifically only allow access to our backend resources from our frontend website. 
 
 To set up CORS, in the `backend` directory, run the command to install cors package:
 
@@ -320,8 +320,8 @@ app.options(
   cors({
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200,
-  }),
-) // add
+  }), 
+) // add (allow cross-origin requests from localhost:3000)
 app.use(cors()) // add
 
 // optional
@@ -409,7 +409,7 @@ connectDB()
 const app = express()
 
 app.use(cors())
-app.use(express.json()) //add (parse JSON data available in request body)
+app.use(express.json()) // add (parse JSON data available in request body)
 app.use(express.urlencoded({ extended: false })) // add (parse URL-encoded data available in request body)
 
 app.use('/api/addresses', require('./routes/addressRoutes')) // add
