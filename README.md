@@ -6,6 +6,20 @@
 
 ![5E11A61D-6BAC-4269-974E-3D85946295DC](https://github.com/Punpun1643/CS3219-labs/assets/60144099/bc88876b-1df8-4835-b9d4-bd6961b3f782)
 
+To run the frontend of the application, at the root directory, run the command:
+
+to make sure that all the required packages and dependencies are installed
+
+```
+npm install
+```
+
+then run the command below to serve the frontend
+
+```
+npm run dev
+```
+
 ## Plan
 
 ### Intro and setting up
@@ -13,9 +27,6 @@
 - Part 1: A brief overview of REST API
 - Part 2: Setting up Node and Express
 - Part 3: Set up MongoDB
-
-### Structuring the backend architecture
-
 - Part 4: Cross-origin resource sharing (CORS)
 
 ### Building our REST API endpoints
@@ -27,11 +38,11 @@
 
 ### What is `REST`
 
-- A RESTful API (Representational State Transfer API) is a web-based architectural style for designing networked applications. It uses standard HTTP methods (GET, POST, PUT, DELETE) to perform CRUD (Create, Read, Update, Delete) operations on resources represented in a stateless manner. RESTful APIs are designed to be simple, scalable, and easy to consume, making them widely used for building web services and allowing different systems to communicate and interact over the internet. They typically respond with JSON or XML data and are the backbone of modern web applications and services.
+- A RESTful API (Representational State Transfer API) is a web-based architectural style for designing networked applications. It uses standard HTTP methods (e.g. `GET`, `POST`, `PUT`, `DELETE`) to perform CRUD (Create, Read, Update, Delete) operations on resources represented in a stateless manner. RESTful APIs are designed to be simple, scalable, and easy to consume, making them widely used for building web services and allowing different systems to communicate and interact over the internet. They typically respond with JSON or XML data and are the backbone of modern web applications and services.
 
 ### Purpose of `REST` API
 
-- Provides a standardized way to access and manipulate resources on a server using common HTTP methods (GET, POST, PUT, DELETE). 
+- Provides a standardized way to access and manipulate resources on a server using common HTTP methods (e.g. `GET`, `POST`, `PUT`, `DELETE`).
 
 - REST APIs allow developers to build scalable, interoperable, and stateless web services that can be consumed by various clients, such as web browsers, mobile apps, and other backend systems. They promote a simple and uniform architecture, making it easier to integrate and interact with diverse systems, and they are widely used in modern web development for building APIs that serve data and functionalities to different applications.
 
@@ -51,7 +62,7 @@ Prerequisite:
 
 #### 2.2.1 Create a `package.json` file for your application
 
-Use in the `backend` directory run `npm init` to create a package.json file for your application. This command prompts you for a number of things, including the name and version of your application and the name of the initial entry point file (by default this is index.js). For now, just accept the defaults:
+Use in the `backend` directory run `npm init` to create a `package.json` file for your application. This command prompts you for a number of things, including the name and version of your application and the name of the initial entry point file (by default this is index.js). For now, just accept the defaults:
 
 ```js
 // npm
@@ -139,6 +150,8 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}...`)
 })
+
+module.exports = app
 ```
 
 To start the server, run the following command:
@@ -175,7 +188,7 @@ npm install mongoose
 
 #### 3.2.2 Initialze the database
 
-In the config directory, create `db.js`. This is where we will initialize the mongodb database.
+In the `config` under `backend` directory, create `db.js`. This is where we will initialize the mongodb database.
 
 ```js
 // db.js
@@ -195,7 +208,7 @@ const connectDB = async () => {
 module.exports = connectDB
 ```
 
-The `MONGO_URI` is the connection string of your mongodb. It should be defined in the `.env` file:
+The `MONGO_URI` is the connection string of your mongodb. It should be defined in the `.env` file under your `backend` directory:
 
 ```js
 // .env
@@ -223,7 +236,7 @@ app.listen(port, () => {
 })
 ```
 
-We can now use connectDB() in `index.js`
+We can now use `connectDB()` in `index.js`
 
 ```js
 const express = require('express')
@@ -396,8 +409,8 @@ connectDB()
 const app = express()
 
 app.use(cors())
-app.use(express.json()) // parse JSON data available in request body
-app.use(express.urlencoded({ extended: false })) // parse URL-encoded data available in request body
+app.use(express.json()) //add (parse JSON data available in request body)
+app.use(express.urlencoded({ extended: false })) // add (parse URL-encoded data available in request body)
 
 app.use('/api/addresses', require('./routes/addressRoutes')) // add
 
@@ -550,30 +563,24 @@ router.route('/:id').delete(deleteAddress) // add
 module.exports = router
 ```
 
+This means that the endpoint to delete an addresses is `/api/addresses/:id`
+
 ```js
 // addressController.js
 ...
 
-// @desc Delete goal
-// @route DELETE /api/goals/:id
-// @access Private
-const deleteGoal = asyncHandler(async (req, res) => {
-  const goal = await Goal.findById(req.params.id)
-
-  if (!goal) {
-    res.status(400)
-    throw new Error('Goal not found!')
+// @desc   Delete an address
+// @route  DELETE /api/addresses/:id
+// @access Public
+const deleteAddress = async (req, res) => {
+  try {
+    const address = await Address.findById(req.params.id)
+    await address.deleteOne()
+    res.status(200).json({ message: 'Address removed' })
+  } catch (error) {
+    res.status(404).json({ message: 'Address not found' })
   }
-
-  if (!req.user) {
-    res.status(401)
-    throw new Error('User not authorized!')
-  }
-
-  await goal.deleteOne()
-
-  res.status(200).json({ id: req.params.id })
-})
+}
 ```
 
 To test the endpoint, you can try making a `DELETE` request as follow:
@@ -600,7 +607,7 @@ router.route('/:id').delete(deleteAddress).put(editAddress)
 
 module.exports = router
 ```
-
+ 
 ```js
 // addressController.js
 
@@ -691,6 +698,16 @@ const onSubmit = async (data) => {
     console.error('Error creating address:', error)
   }
 }
+```
+
+`onSubmit` can be used as follow:
+
+```js
+// InputButton.jsx
+
+<form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+  ...
+</form>
 ```
 
 ### 6.3 Delete an address
