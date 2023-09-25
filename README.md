@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to CS3219! This guide will introduce you to REST APIs and how to implemenent them by walking you through the development of a full stack address book application with CRUD functionalities (similar to CS2103, but with Javascript instead of Java). 
+Welcome to CS3219! This guide will introduce you to REST APIs and how to implement them by walking you through the development of a full stack address book application with CRUD functionalities (similar to CS2103, but with Javascript instead of Java). 
 
 ![5E11A61D-6BAC-4269-974E-3D85946295DC](https://github.com/Punpun1643/CS3219-labs/assets/60144099/bc88876b-1df8-4835-b9d4-bd6961b3f782)
 
@@ -26,7 +26,7 @@ Welcome to CS3219! This guide will introduce you to REST APIs and how to impleme
 Please ensure that you have the following installed on your computer before continuing with the rest of the guide:
 
 1. Install [Node.js LTS](https://nodejs.org/en/download)
-> :memo: **Note:** The LTS version of Node.js as of the time of writing this guide is 18.X.X. If you have a different version of Node.js installed and you need to change it, there is a useful guide [here](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/development_environment#installing_node) on how to do so using nvm.
+> 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is 18.X.X. If you have a different version of Node.js installed and you need to change it, there is a useful guide [here](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/development_environment#installing_node) on how to do so using nvm.
 2. Install [MongoDB Community Edition](https://www.mongodb.com/docs/manual/administration/install-community/) - Follow the installation guide for your OS
 3. Install [Git](https://git-scm.com/downloads)
 4. Install [Postman App](https://www.postman.com/downloads/)
@@ -54,7 +54,7 @@ A RESTful API (Representational State Transfer API) is a web-based architectural
 
 ### 1. Fork and clone the starter repository
 
-We have created a starter repository for this guide [here](https://github.com/nus-CS3219/CS3219-REST-API-MongoDB-Lab). This starter repository contains the code for the frontend of the application.
+We have created a starter repository for this guide [here](https://github.com/CS3219-AY2324S1/SE-Toolbox-REST-API-MongoDB.git). This starter repository contains the code for the frontend of the application.
 
 Fork this starter repository to your own Github account, then open your terminal and clone the forked repository into a directory of your choice.
 
@@ -63,7 +63,7 @@ Fork this starter repository to your own Github account, then open your terminal
 cd <path to directory of your choice>
 
 // clone the starter repository
-git clone https://github.com/<your github username>/CS3219-REST-API-MongoDB-Lab.git
+git clone https://github.com/<your github username>/SE-Toolbox-REST-API-MongoDB.git
 ```
 
 ### 2. Install the required dependencies
@@ -72,7 +72,7 @@ Now that you have cloned the starter repository, you will need to navigate to it
 
 ```
 // navigate to starter repository
-cd CS3219-REST-API-MongoDB-Lab
+cd SE-Toolbox-REST-API-MongoDB
 
 // install dependencies
 npm install
@@ -690,7 +690,7 @@ To test the endpoint, you can make a `DELETE` request to the endpoint using Post
 
 ## Integrating with the Frontend
 
-> :memo: **Note:** For this section, you will be working in the root directory of the repository as you will be making changes in the frontend code. Make sure to navigate such that your working directory is `<directory of your choice>/CS3219-REST-API-MongoDB-Lab`.
+> :memo: **Note:** For this section, you will be working in the root directory of the repository as you will be making changes in the frontend code. Make sure to navigate such that your working directory is `<directory of your choice>/SE-Toolbox-REST-API-MongoDB`.
 
 You will need to install [axios](https://www.npmjs.com/package/axios), a useful tool that will allow you to make requests to the backend server. You can do so by executing the command `npm install axios`.
 
