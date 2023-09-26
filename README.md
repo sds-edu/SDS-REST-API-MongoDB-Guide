@@ -401,60 +401,30 @@ module.exports = router
 Then, you can add the following to `index.js` to connect the newly created address router:
 
 ```js
-// import the dependencies required for Express.js
-const express = require('express')
-// import the dependencies required for cors
-const cors = require('cors')
-// import the dependencies required for dotenv
-// the config() function allows for reading of the .env file
-const dotenv = require('dotenv').config()
-// import the connectDB function created earlier
-const connectDB = require('./config/db')
+/**
+ * Import required dependencies, connect db and initialize Express.js application ... (same as before). i.e. same up to: 
+ * app.use(cors()) 
+ **/
 
-// initialize connection to MongoDB database
-connectDB()
+// ADD the following code:
 
-// initialize the Express.js application
-// store it in the app variable
-const app = express()
-
-// allow cross-origin requests to reach the Expres.js server
-// from localhost:3000, which is your frontend domain
-app.options(
-  '*',
-  cors({
-    origin: 'http://localhost:3000',
-    optionsSuccessStatus: 200,
-  }), 
-)
-app.use(cors())
 // allow JSON data in request body to be parsed
 app.use(express.json())
 // allow URL-encoded data in request body to be parsed
 app.use(express.urlencoded({ extended: false }))
 
-// use 8080 as a fallback if PORT is undefined in .env file
-const PORT = process.env.PORT || 8080
+/**
+ * Define port and start up Express.js application ... (same as before). i.e. same up to:
+ * app.listen(PORT, () => {...})
+ **/
 
-// configure the Express.js application to run at port 8080
-// since you will be running this application on your computer (localhost),
-// the backend server will be running at http://localhost:8080
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}...`)
-})
+// ADD the following code: 
 
 // use the address router to handle requests 
 // at http://localhost:8080/api/addresses
 app.use('/api/addresses', require('./routes/addressRoutes'))
 
-// when a GET request is made to http://localhost:8080/, 
-// the response will be { message: 'Hello World' } in JSON format
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello World' })
-})
-
-// export Express.js application to be used elsewhere
-module.exports = app
+/** rest of the code ... (same as before) **/
 ```
 
 #### Test API route
@@ -535,9 +505,9 @@ router.route('/').post(addAddress)
 
 To test the endpoint, you can make a `POST` request to the endpoint using Postman App as follows:
 
-![6F2F1EA4-D574-4336-8D8F-E904F9DB105E](https://github.com/Punpun1643/CS3219-labs/assets/60144099/19091911-6134-4c22-a4e3-cda52ed9fd5c)
+![6F2F1EA4-D574-4336-8D8F-E904F9DB105E](images/POST_postman.png)
 
-> 💡 **Tip:** Keep track of the ID of this newly added address to use in the testing of the next few routes
+> 💡 **Tip:** Add a few more addresses to the database. For example, you can add an address for 'NUS School of Computing' with description 'Somewhere in NUS'. Take note of the ID returned by the `POST` request as you will need it to test the `PUT` and `DELETE` endpoints later on.
 
 ### `PUT` - update an existing address
 
@@ -609,9 +579,11 @@ router.route('/:id').put(updateAddress)
 
 #### Test API route
 
-To test the endpoint, you can make a `PUT` request to the endpoint using Postman App as follows:
+To test the endpoint, you can make a `PUT` request to the endpoint using Postman App as follows.  
 
-![CF3E013F-AF27-4A88-8DBB-34D5690A0A8F_1_105_c](https://github.com/Punpun1643/CS3219-labs/assets/60144099/de6b0169-5437-4304-80d8-bb4b657ea85a)
+In this example, the ID we want to update is `64c7dd8ec95846d56c68e081`. Note that you must make a request to the endpoint with the ID of the address that you want to update:
+
+![CF3E013F-AF27-4A88-8DBB-34D5690A0A8F_1_105_c](images/PUT_postman.png)
 
 ### `DELETE` - delete an existing address
 
@@ -666,9 +638,11 @@ router.route('/:id').delete(deleteAddress)
 
 #### Test API route
 
-To test the endpoint, you can make a `DELETE` request to the endpoint using Postman App as follows:
+To test the endpoint, you can make a `DELETE` request to the endpoint using Postman App as follows.
 
-![20F86C6A-D013-4C0F-8C7D-284A1AAF66EF_1_105_c](https://github.com/Punpun1643/CS3219-labs/assets/60144099/66de1d0a-6cee-478c-ab3e-de90cab06d50)
+In this example, the ID we want to delete is `64c7dd52c95846d56c68e07e`. Note that you must make a request to the endpoint with the ID of the address that you want to update:
+
+![20F86C6A-D013-4C0F-8C7D-284A1AAF66EF_1_105_c](images/DELETE_postman.png)
 
 ## Integrating with the Frontend
 
@@ -697,7 +671,7 @@ This is what the folder structor of the starter repository should look like at t
 
 ### Fetch all addresses
 
-To fetch and display all addresses on the frontend, you can make a `GET` request to `http://localhost:8080/api/addresses/` from the `AddressCardList` component in `AddressCardList.jsx`.
+To fetch and display all addresses on the frontend, you can make a `GET` request to `http://localhost:8080/api/addresses/` from the `AddressCardList` component in `AddressCardList.jsx`. This can be found in the `components` directory.
 
 Replace the existing `addresses` variable with the `useState` hook and fetch the data as follows:
 
@@ -724,7 +698,7 @@ useEffect(() => {
 
 ### Add a new address
 
-To add a new address via the frontend, you can make the `InputButton` component in `InputButton.jsx` fire a `POST` request to `http://localhost:8080/api/addresses/` when it is clicked. 
+To add a new address via the frontend, you can make the `InputButton` component in `InputButton.jsx` (in the `component` directory) fire a `POST` request to `http://localhost:8080/api/addresses/` when it is clicked. 
 
 Here are some code snippets to help you get started:
 
@@ -767,8 +741,6 @@ const onSubmit = async (data) => {
 }
 ```
 
-Use this code snippet as a starting point to implement a way for users to update the existing addresses displayed in `AddressCardList`.
-
 ### Delete an existing address
 
 To delete an existing address, you can define a click handler that makes a `DELETE` request to `http://localhost:8080/api/addresses/:id`
@@ -791,9 +763,7 @@ Here is one example of how`handleDeleteAddress` can be used:
 <AlertDialogAction onClick={handleDeleteAddress}>Continue</AlertDialogAction>
 ```
 
-Use these code snippets as a starting point to implement a way for users to delete the existing addresses displayed in `AddressCardList`.
-
-## Additional Resources
+## References
 
 Here are some of the resources that were used in the making of this guide. You may find these reads to be useful in helping to further your understanding of REST APIs and the best ways to implement them.
 
