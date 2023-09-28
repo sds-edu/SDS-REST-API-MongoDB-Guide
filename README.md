@@ -1,203 +1,260 @@
-## What are we building?
+# CS3219 Guide to REST APIs
 
-- We will be building an Address Book similar to what we have done in CS2103/T. This time, instead of Java, we will implement the CRUD functionality using Javascript!
+## Introduction
 
-- Through this, you will gain a hands-on experience implementing CRUD operations with REST API.
+Welcome to CS3219! This guide will introduce you to REST APIs and how to implement them by walking you through the development of a full stack address book application with CRUD functionalities (similar to CS2103, but with Javascript instead of Java). 
 
 ![5E11A61D-6BAC-4269-974E-3D85946295DC](https://github.com/Punpun1643/CS3219-labs/assets/60144099/bc88876b-1df8-4835-b9d4-bd6961b3f782)
 
-To run the frontend of the application, at the root directory, run the command:
+### Tech Stack
 
-to make sure that all the required packages and dependencies are installed
+###### Frontend
+
+- [Next.js](https://nextjs.org/)
+
+###### Backend
+
+- [Express.js](https://expressjs.com/)
+- [MongoDB](https://www.mongodb.com/)
+
+###### Testing
+
+- [Postman](https://www.postman.com/)
+
+### Prerequisites
+
+Please ensure that you have the following installed on your computer before continuing with the rest of the guide:
+
+1. Install [Node.js LTS](https://nodejs.org/en/download)
+> 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is 18.X.X. If you have a different version of Node.js installed and you need to change it, there is a useful guide [here](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/development_environment#installing_node) on how to do so using nvm.
+2. Install [MongoDB Community Edition](https://www.mongodb.com/docs/manual/administration/install-community/) - Follow the installation guide for your OS
+3. Install [Git](https://git-scm.com/downloads)
+4. Install [Postman App](https://www.postman.com/downloads/)
+5. Ensure you have an IDE of your choice installed (e.g. This guide was made using [VSCode](https://code.visualstudio.com/))
+
+## Brief overview of REST API
+
+### What is REST
+
+A RESTful API (Representational State Transfer API) is a web-based architectural style for designing networked applications. It uses standard HTTP methods (e.g. `GET`, `POST`, `PUT`, `DELETE`) to perform CRUD (Create, Read, Update, Delete) operations on resources represented in a stateless manner. RESTful APIs are designed to be simple, scalable, and easy to consume, making them widely used for building web services and allowing different systems to communicate and interact over the internet. They typically respond with JSON or XML data and are the backbone of modern web applications and services.
+
+### Purpose of REST API
+
+- Provides a standardized way to access and manipulate resources on a server using common HTTP methods (e.g. `GET`, `POST`, `PUT`, `DELETE`).
+- REST APIs allow developers to build scalable, interoperable, and stateless web services that can be consumed by various clients, such as web browsers, mobile apps, and other backend systems. They promote a simple and uniform architecture, making it easier to integrate and interact with diverse systems, and they are widely used in modern web development for building APIs that serve data and functionalities to different applications.
+
+### REST API conventions
+| Term | Description |
+| --- | --- |
+| Resource | The core concept in any RESTful API is resource. A resource is an object with a type, associated data, relationships to other resources, and a set of methods that operate on it. |
+| Endpoint | One end of a communication channel in an API, typically identified by a URI, where requests are sent to access resource or trigger actions from web applications or servers, with responses returned to complete the interaction. Basically, the place that APIs send requests and where the resource lives, is called an endpoint. |
+| Collection | Resources can be organized into collections, each of which is uniform, containing only a single type of resource, and unordered. |
+
+- The endpoint refers directly to the resource and the HTTP verbs (e.g. `GET`, `POST`, `PUT`, `DELETE`) specify the actions.
+- Typically takes 2 URI per resource
+    - One for the whole collection
+    - One for a single object in that collection
+    - For example, consider a fictional resource called `address` that contains a list of addresses. The URI for the collection would be `/addresses` and the URI for a single address would be `/addresses/:id` where `:id` is the unique identifier of the address.
+- You can also nest collections
+
+## Setting up the Frontend
+
+### 1. Fork and clone the starter repository
+
+We have created a starter repository for this guide [here](https://github.com/CS3219-AY2324S1/SE-Toolbox-REST-API-MongoDB.git). This starter repository contains the code for the frontend of the application.
+
+Fork this starter repository to your own Github account, then open your terminal and clone the forked repository into a directory of your choice.
 
 ```
+// navigate to directory of your choice
+cd <path to directory of your choice>
+
+// clone the starter repository
+git clone https://github.com/<your github username>/SE-Toolbox-REST-API-MongoDB.git
+```
+
+### 2. Install the required dependencies
+
+Now that you have cloned the starter repository, you will need to navigate to it and install the dependencies required for the frontend of the application. The dependencies are listed in the `package.json` file in the root directory of the starter repository.
+
+```
+// navigate to starter repository
+cd SE-Toolbox-REST-API-MongoDB
+
+// install dependencies
 npm install
 ```
 
-then run the command below to serve the frontend
+### 3. Start up the frontend
+
+You can now run the frontend of the application at `localhost:3000` by simply executing the command `npm run dev`.
+
+## Setting up the Backend
+
+### 1. Initialise the backend directory
+
+You will now need to create a new folder `backend` within the starter repository to contain the source code for the backend of the application. 
+
+You can do so via your IDE or by executing the command `mkdir backend`
+
+### 2. Initialise the `package.json` file
+
+`package.json` is a file that contains important information about an application such as the entry point of the application, required dependencies and more. You can read more about it [here](https://docs.npmjs.com/cli/v10/configuring-npm/package-json) if you are interested.
+
+You can create this file in the backend directory that you just created by running `npm init`. The steps are as follows:
 
 ```
-npm run dev
-```
+// navigate to backend directory
+cd backend
 
-## Plan
-
-### Intro and setting up
-
-- Part 1: A brief overview of REST API
-- Part 2: Setting up Node and Express
-- Part 3: Set up MongoDB
-- Part 4: Cross-origin resource sharing (CORS)
-
-### Building our REST API endpoints
-
-- Part 5: REST API
-- Part 6: Integration with the frontend
-
-## Part 1: A brief overview of REST API
-
-### What is `REST`
-
-- A RESTful API (Representational State Transfer API) is a web-based architectural style for designing networked applications. It uses standard HTTP methods (e.g. `GET`, `POST`, `PUT`, `DELETE`) to perform CRUD (Create, Read, Update, Delete) operations on resources represented in a stateless manner. RESTful APIs are designed to be simple, scalable, and easy to consume, making them widely used for building web services and allowing different systems to communicate and interact over the internet. They typically respond with JSON or XML data and are the backbone of modern web applications and services.
-
-### Purpose of `REST` API
-
-- Provides a standardized way to access and manipulate resources on a server using common HTTP methods (e.g. `GET`, `POST`, `PUT`, `DELETE`).
-
-- REST APIs allow developers to build scalable, interoperable, and stateless web services that can be consumed by various clients, such as web browsers, mobile apps, and other backend systems. They promote a simple and uniform architecture, making it easier to integrate and interact with diverse systems, and they are widely used in modern web development for building APIs that serve data and functionalities to different applications.
-
-### `REST` conventions
-
-- The endpoint refers directly to the resource and the HTTP verbs (e.g. `GET`, `POST`, `PUT`, `DELETE`) specify the actions.
-- Typically takes 2 URI per resource: one for the whole collection and one for a single object in that collection
-- We can also nest collections
-
-## Part 2: Setting up Node and Express
-
-### 2.1 Setting up the development environment
-
-Prerequisite:
-
-- You should have Node and a package manager on your operating system. To install, please visit the guide [here](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/development_environment#installing_node)
-
-#### 2.2.1 Create a `package.json` file for your application
-
-Use in the `backend` directory run `npm init` to create a `package.json` file for your application. This command prompts you for a number of things, including the name and version of your application and the name of the initial entry point file (by default this is index.js). For now, just accept the defaults:
-
-```js
-// npm
+// create package.json file
 npm init
-
-// yarn
-yarn init
-
-// pnpm
-pnpm init
 ```
+> 💡**Tip:** `npm init` is an interactive command that will prompt you for some information. You can accept all the default arguments for this application.
 
-#### 2.2.2 Install Express
+### 3. Install the required dependencies
+
+As mentioned earlier in the [Tech Stack](###Tech-Stack) section, you will be using Express.js for the backend of this application, so you will need to install it.
+
+In addition, you will also be installing the following tools that will help to ease your development process:
+
+1. [nodemon](https://www.npmjs.com/package/nodemon) reloads the backend server automatically when changes are made to the source code so that you don't have to manually restart it yourself.
+2. [dotenv](https://www.npmjs.com/package/dotenv) allows you to make use of _environmental variables_ defined in a `.env` file to protect secrets.
+3. [cors](https://www.npmjs.com/package/cors) allows you to enable CORS options and configure which domains your backend server can receive requests from. You can read more about CORS [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) if you are interested.
+
+You can install all these dependencies by executing these commands:
+
+```
+// install Express.js locally
+npm i --save express
+
+// install dotenv locally
+npm i --save dontenv
+
+// install cors locally
+npm i --save cors
+
+// install nodemon locally as a development dependency
+npm i --save-dev nodemon
+```
+> 📝 **Note:** You can read more about the differences between --save and --save-dev [here](https://www.geeksforgeeks.org/what-is-the-difference-between-save-and-save-dev-in-node-js/) if you are interested.
+
+### 4. Set up Express.js server
+
+Create an `index.js` file in the `backend` directory and add the following lines of code. Make sure to read the inline comments to gain a better understanding of how the Express.js server works:
 
 ```js
-// npm
-npm install express
+// import the dependencies required for Express.js
+const express = require('express')
+// import the dependencies required for cors
+const cors = require('cors')
 
-// yarn
-yarn add express
+// initialize the Express.js application
+// store it in the app variable
+const app = express()
 
-// pnpm
-pnpm add express
-```
-
-After running the command, `express` should appear under `dependencies` in your `package.json`
-
-```js
-"dependencies": {
-    ...
-    "express": "^4.18.2",
-    ...
-}
-```
-
-#### 2.2.3 Install `dotenv`
-
-```js
-// npm
-npm install dotenv --save
-
-// yarn
-yarn add dotenv --save
-
-// pnpm
-pnpm add dotenv --save
-```
-
-#### 2.2.4 [Optional] Install `nodemon`
-
-```js
-// npm
-npm install nodemon
-
-// yarn
-yarn add nodemon
-
-// pnpm
-pnpm add nodemon
-```
-
-#### 2.2.5 Add to the scripts in `package.json`
-
-```js
-"start": "nodemon index.js"
-```
-
-### 2.2.6 Minimal setup of an Express server
-
-In the `index.js` add the following lines of code:
-
-```js
-const express = require('express') // import modules/libraries with require()
-
-const app = express() // intialize express app
+// allow cross-origin requests to reach the Expres.js server
+// from localhost:3000, which is your frontend domain
+app.options(
+  '*',
+  cors({
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200,
+  }), 
+)
+app.use(cors())
 
 const PORT = 8080
 
-// optional
-app.get('/', (req, res) => {
-  // a HTTP request consists of path (i.e. /), HTTP action (i.e. GET)
-  res.json({ message: 'Hello World' }) // the server send back the respond  in the json format through res.json()
-})
-
+// configure the Express.js application to run at port 8080
+// since you will be running this application on your computer (localhost),
+// the backend server will be running at http://localhost:8080
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}...`)
 })
 
+// when a GET request is made to http://localhost:8080/, 
+// the response will be { message: 'Hello World' } in JSON format
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello World' })
+})
+
+// export Express.js application to be used elsewhere
 module.exports = app
 ```
 
-To start the server, run the following command:
+Make sure to read the inline comments to gain a better understanding of how the Express.js server works.
 
+
+### 5. Start up the backend
+
+In the `package.json` file, you should see one `test` script under the `scripts` section. You will need to add another `dev` script as follows:
+
+```json
+package.json
+
+// rest of the code ...
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+},
+// rest of the code ...
 ```
-npm start
+
+Adding this script means that whenever you execute `npm run dev` in the backend directory, the `nodemon` tool will start up your backend server via the entry point `index.js`, which you had just set up in the previous step. 
+
+As such, you can execute the command `npm run dev` to run the backend server at `localhost:8080`.
+
+## Setting up the Database
+
+> 📝 **Note:** In this section, you will continue to work in the `backend` directory. 
+
+### 1. Install the required dependencies
+
+You will need to install [mongoose](https://mongoosejs.com/docs/guide.html), which is an Object Relational Mapping (ORM) tool that makes it easier and simpler for developers to interact with MongoDB functionalities. 
+
+You can do so via executing the command `npm install mongoose`.
+
+### 2. Initialise `.env` file for environmental variables
+
+In your `backend` directory, create a file called `.env`. You can do so via the your IDE or by executing the command `touch .env`.
+
+Then, add the following content to your `.env` file:
+```
+PORT=8080
+MONGODB_URI="mongodb://127.0.0.1:27017/cs3219-rest-api-example"
+```
+Here, you are specifying the connection string that can be used to connect to your database. The format for this connection string is `<standard_prefix>://<host>:<port>/<database_name>`. In this example:
+
+- `<standard_prefix>` is simply `mongodb`, which refers to the MongoDB Community Edition Server running on your computer.
+
+You can read more about MongoDB connection strings [here](https://www.mongodb.com/docs/manual/reference/connection-string/#std-label-connections-standard-connection-string-format) if you are interested.
+
+### 3. Initialise the database and connect to it
+
+> ⚠️ **Warning:** This step will require you to have MongoDB server running on your computer, which should be the case if you followed the [Prerequisites](#Prerequisites) section and correctly followed the MongoDB installation guide for your OS. If not, please do it before continuing with the rest of this guide.
+
+You will need to create a folder called `config` under your `backend` directory. You can do so via your IDE or by executing the command `mkdir config`.
+
+Then, you will need to create a file called `db.js`. You can do so via your IDE or by executing the following commands:
+```
+// navigate to config directory
+cd config
+
+// create db.js file
+touch db.js
 ```
 
-You should be able to see `Server is running on port 8080...` in the console.
-
-If you visit `localhost:8080` you should be able to see "Hello World".
-
-## Part 3: Set up MongoDB
-
-### 3.1 Setup MongoDB (Atlas or Local)
-
-Follow these guide to set up MongoDB:
-
-- MongoDB Atlas: [here](https://www.mongodb.com/docs/atlas/tutorial/create-atlas-account/)
-
-- MongoDB Local: [here](https://www.prisma.io/dataguide/mongodb/setting-up-a-local-mongodb-database)
-
-### 3.2 Connect the DB to the backend server
-
-Note: MongoDB Atlas is used in the example shown
-
-#### 3.2.1 Install `mongoose`
-
-In the `backend` directory, install mongoose:
-
+In your `db.js` file, add the following code. Make sure to read the inline comments to gain a better understanding of how setting up a connection to MongoDB works:
 ```js
-npm install mongoose
-```
-
-#### 3.2.2 Initialze the database
-
-In the `config` under `backend` directory, create `db.js`. This is where we will initialize the mongodb database.
-
-```js
-// db.js
-
+// import dependencies required for mongoose
 const mongoose = require('mongoose')
 
+// function to start up and connect to MongoDB database
 const connectDB = async () => {
   try {
-    const con = await mongoose.connect(process.env.MONGO_URI) // read from the .env file
+      // attempt to connect to MongoDB database via the connection string specified in .env file
+    const con = await mongoose.connect(process.env.MONGODB_URI) // read from the .env file
     console.log(`MongoDB Connected: ${con.connection.host}`)
   } catch (error) {
     console.log(error)
@@ -205,171 +262,82 @@ const connectDB = async () => {
   }
 }
 
+// export connection function to be used in index.js
 module.exports = connectDB
 ```
 
-The `MONGO_URI` is the connection string of your mongodb. It should be defined in the `.env` file under your `backend` directory:
+Make sure to read the inline comments to gain a better understanding of how setting up a connection to MongoDB works.
+
+Now, you will need to make use of this `connectDB` function in the backend entrypoint `index.js`. Make the following changes to `index.js` to connect to the MongoDB database when starting up the backend server:
 
 ```js
-// .env
+/** code to import the express and cors dependencies ... (same as before) **/
 
-// example only
-MONGO_URI = mongodb+srv://<username>:<password>@....mongodb.net/?retryWrites=true&w=majority
-```
+// ADD the following code:
 
-#### 3.2.3 Connect to the server to the database
-
-Import and configure `dotenv` in `index.js`
-
-```js
-// index.js
-
-const express = require('express')
-
-const app = express()
-const dotenv = require('dotenv').config() // add here
-
-const port = process.env.PORT || 8080
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}...`)
-})
-```
-
-We can now use `connectDB()` in `index.js`
-
-```js
-const express = require('express')
-
+// import the dependencies required for dotenv
+// the config() function allows for reading of the .env file
 const dotenv = require('dotenv').config()
+// import the connectDB function created earlier
 const connectDB = require('./config/db')
 
-const port = process.env.PORT || 8080
-
-connectDB() // add here
-
-const app = express()
-
-// optional
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello World' })
-})
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}...`)
-})
-```
-
-Run the server and you should be able to see:
-
-```js
-Server is running on port 8080...
-MongoDB Connected: example-example.blahblah.mongodb.net
-```
-
-## Part 4: Cross-origin resource sharing (CORS)
-
-### Same-origin policy
-
-- The same-origin policy is a security mechanism enforced by the browser that restricts how a document or script loaded by one origin can interact with a resource from another origin.
-
-- Basically, if the origin of the resource is different from the origin of the document or script that is trying to access it, the browser will block the interaction.
-
-- This helps isolate potentially malicious documents, reducing possible attack vectors. Can help protect users from malicious websites.
-
-Problem 🤔 : but we need to access our API from a different origin! This is where CORS comes in.
-
-### CORS
-
-- CORS is a mechanism that allows web servers to specify which cross-origin requests are allowed.
-
-- This allows developers to relax the same-origin policy in a controlled way, while still maintaining a high level of security.
-
-Note: CORS can be set up with Express relatively easily through a middleware. The official docs can be found [here](https://expressjs.com/en/resources/middleware/cors.html#enabling-cors-pre-flight).
-
-### 4.1 Setting up CORS
-
-Ideally, in the production environment, we probably want to specifically only allow access to our backend resources from our frontend website. 
-
-To set up CORS, in the `backend` directory, run the command to install cors package:
-
-```
-npm install cors
-```
-
-Update `index.js` to add the CORS middleware:
-
-```js
-// index.js
-
-const express = require('express')
-
-const dotenv = require('dotenv').config()
-const connectDB = require('./config/db')
-
-const cors = require('cors') // add
-
-const port = process.env.PORT || 8080
-
+// initialize connection to MongoDB database
 connectDB()
 
-const app = express()
 
-app.options(
-  '*',
-  cors({
-    origin: 'http://localhost:3000',
-    optionsSuccessStatus: 200,
-  }), 
-) // add (allow cross-origin requests from localhost:3000)
-app.use(cors()) // add
+/** 
+ * code to initialize the Express.js application store it in the app variable ... (same as before)
+ * code to allow cross-origin requests to reach the Express.js server ... (same as before) 
+**/
 
-// optional
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello World' })
-})
+// THEN replace const PORT = 8080 with the following:
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}...`)
-})
+// use 8080 as a fallback if PORT is undefined in .env file
+const PORT = process.env.PORT || 8080
+
+/** rest of the code ... (same as before) **/
 ```
 
-## Part 5: REST API
+## Implementing REST API
 
-### 5.1 Initial directory structure
+> 📝**Note:** In this section, you will continue to work in the root of the `backend` directory. 
 
-Here, we will briefly go over our backend structure.
+This is what the folder structure of the `backend` directory will look like by the end of this section:
 
 ```
 ├── backend
 │   ├── config
 │   ├── controllers
-│   ├── middlewares
 │   ├── models
 │   └── routes
 ```
 
-- `config`: this is where we intialize our mongoDB
-- `controllers`: define all the controllers needed for the application
-- `middlewares`: contains our defined middlewares
-- `models`: data models required for the application
-- `routes`: a folder for each logical set of routes
-
-This visualization summarizes our backend project structure:
+- `controllers` contains functions that will be handling business logic.
+- `models` contains your mongoose Models, which essentially act as an interface to interact with different schemas in the MongoDB database.
+- `routes` contains files that specify the endpoints supported by the backend server.
 
 ![backend-structure](https://github.com/Punpun1643/CS3219-labs/assets/60144099/7abd018e-9807-4a96-91ee-613d18b3c602)
 
-### 5.3 `GET` - get all addresses
+You can create these 3 new folders via your IDE or by executing the following commands:
 
-#### 5.3.1 Define the address model
+```
+// create controllers folder
+mkdir controllers
 
-An address will have 2 attributes: address title, and address description. We need to define this address model.
+// create models folder
+mkdir models
 
-In the `models` directory, create `addressModel.js` with the following:
+// create routes folder
+mkdir routes
+```
+
+### 1. `GET` - Fetch all addresses
+
+#### Define the `Address` model
+
+In the `models` directory, create `addressModel.js` with the following content:
 
 ```js
-// addressModel.js
-
 const mongoose = require('mongoose')
 
 const addressSchema = mongoose.Schema({
@@ -383,129 +351,102 @@ const addressSchema = mongoose.Schema({
   },
 })
 
+// export Address model to be used in controller
 module.exports = mongoose.model('Address', addressSchema)
 ```
 
-#### 5.3.2 Define API routes
+#### Define `fetchAllAddresses` function
 
-Our api endpoints for addresses will look something like this: `/api/addresses/...` e.g. `/api/addresses/:id`
-
-Before definding the specific endpoints in the `routes` directory, we can add the following to `index.js`:
+In the `controllers` directory, create `addressController.js`. Here, you will define a function that will handle the logic behind fetching all the addresses from the MongoDB database:
 
 ```js
-// index.js
-
-const express = require('express')
-
-const dotenv = require('dotenv').config()
-const connectDB = require('./config/db')
-
-const cors = require('cors')
-
-const port = process.env.PORT || 8080
-
-connectDB()
-
-const app = express()
-
-app.use(cors())
-app.use(express.json()) // add (parse JSON data available in request body)
-app.use(express.urlencoded({ extended: false })) // add (parse URL-encoded data available in request body)
-
-app.use('/api/addresses', require('./routes/addressRoutes')) // add
-
-// optional
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello World' })
-})
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}...`)
-})
-```
-
-In the `routes` directory, create `addressRoutes.js`, this is where we will define the specific enpoints.
-
-```js
-// addressRoutes.js
-
-const express = require('express')
-const router = express.Router()
-
-router.route('/')
-
-module.exports = router
-```
-
-#### 5.3.3 `getAddresses` controller - get all addresses
-
-In the `controllers` directory, create `addressController.js`. Here, we will define a controller that deals with getting all the addresses from our database:
-
-```js
-// addressController.js
-
+// import Address model
 const Address = require('../models/addressModel')
 
-// @desc    Get all addresses
+// @desc    Fetch all addresses
 // @route   GET /api/addresses
 // @access  Public
-const getAddresses = async (req, res) => {
+const fetchAllAddresses = async (req, res) => {
+  // function provided by Mongoose to fetch all Address documents
   const addresses = await Address.find({})
 
+  // return all addresses in JSON format 
+  // with success status 200
   res.status(200).json(addresses)
 }
 
-module.exports = { getAddresses }
+// export controller functions to be used in corresponding route
+module.exports = { fetchAllAddresses }
 ```
 
-In `addressRoutes.js`, we can use `getAddresses` as follow:
+#### Define API route
+
+Your api endpoints for addresses will look something like this: `/api/addresses/...` e.g. `/api/addresses/:id`
+
+In the `routes` directory, create `addressRoutes.js`, this is where we will define the specific endpoints.
 
 ```js
-// addressRoutes.js
-
 const express = require('express')
 const router = express.Router()
 
-const { getAddresses } = require('../controllers/addressController')
+const { fetchAllAddresses } = require('../controllers/addressController')
 
-router.route('/').get(getAddresses) // here
+// call the fetchAllAddresses function
+// when a GET request is made to http://localhost:8080/api/addresses/
+router.route('/').get(fetchAllAddresses)
 
 module.exports = router
 ```
 
-This means that the endpoint to get all addresses is `/api/addresses/`
+Then, you can add the following to `index.js` to connect the newly created address router:
 
-To test whether the endpoint work correctly, you can use postman and make a `GET` request to `localhost:8080/api/addresses/`
+```js
+/**
+ * Import required dependencies, connect db and initialize Express.js application ... (same as before). i.e. same up to: 
+ * app.use(cors()) 
+ **/
 
-The output should be as follow if there is no address object in the DB:
+// ADD the following code:
+
+// allow JSON data in request body to be parsed
+app.use(express.json())
+// allow URL-encoded data in request body to be parsed
+app.use(express.urlencoded({ extended: false }))
+
+/**
+ * Define port and start up Express.js application ... (same as before). i.e. same up to:
+ * app.listen(PORT, () => {...})
+ **/
+
+// ADD the following code: 
+
+// use the address router to handle requests 
+// at http://localhost:8080/api/addresses
+app.use('/api/addresses', require('./routes/addressRoutes'))
+
+/** rest of the code ... (same as before) **/
+```
+
+#### Test API route
+
+To test whether the endpoint works correctly, you can use Postman App to make a `GET` request to `localhost:8080/api/addresses/`
+
+The output should be as follows if there is no address object in the MongoDB database:
 
 ![2C62B77F-267D-4EEC-9D84-ABC86CD7C314](https://github.com/Punpun1643/CS3219-labs/assets/60144099/a6ada0a4-e38f-48cf-8b0a-11f8ceb3b200)
 
-However, if you were to manually add an address object into the DB, it could look as follow:
+However, if you were to manually add an address first, it would look as follows:
 
 ![8F778A9A-2511-4588-BC36-844F25992B1C](https://github.com/Punpun1643/CS3219-labs/assets/60144099/fee6ff86-f10d-4ce8-b019-9715de4d44dc)
 
-### 5.4 `POST` - create an address
+### 2. `POST` - Add a new address
 
-Similar to `GET` request, we can implement the creation of an address as follow:
+#### Define `addAddress` function
 
-```js
-// addressRoutes.js
-
-const express = require('express')
-const router = express.Router()
-
-const { getAddresses, addAddress } = require('../controllers/addressController')
-
-router.route('/').get(getAddresses).post(addAddress)
-
-module.exports = router
-```
+In `addressController.js`, you will define another function that will handle the logic behind adding a new address to the MongoDB database:
 
 ```js
-// addressController.js
-
-...
+// rest of the code ...
 
 // @desc    Add an address
 // @route   POST /api/addresses
@@ -513,124 +454,98 @@ module.exports = router
 const addAddress = async (req, res) => {
   const { title, description } = req.body
 
+  // validate request body
   if (!title || !description) {
     return res.status(400).json({ message: 'Please enter all fields.' })
   }
 
-  // catch exception when fields are missing
   try {
+    // function provided by Mongoose to create a new Address document
     const address = await Address.create({
       title,
       description,
     })
 
+    // return the newly created Address in JSON format
+    // with created success status 201
     res.status(201).json({
       _id: address._id,
       title: address.title,
       description: address.description,
     })
   } catch (error) {
+    // catch exception when fields are missing
     res.status(400).json({ message: 'Invalid address data.' })
   }
 }
 
-module.exports = { getAddresses, addAddress }
+// export controller functions to be used in corresponding route
+module.exports = { fetchAllAddresses, addAddress }
 ```
 
-You could also add more checks e.g. prevent adding addresses with the same name etc.
+#### Define API route
 
-To test the endpoint, you can try making a `POST` request to the endpoint as follow:
-
-![6F2F1EA4-D574-4336-8D8F-E904F9DB105E](https://github.com/Punpun1643/CS3219-labs/assets/60144099/19091911-6134-4c22-a4e3-cda52ed9fd5c)
-
-### 5.5 `DELETE` - delete an address
+In `addressRoutes.js`, define another route as follows.
 
 ```js
-// addressRoutes.js
+// rest of the code ...
 
-const express = require('express')
-const router = express.Router()
+const { fetchAllAddresses, addAddress } = require('../controllers/addressController')
 
-const {
-  getAddresses,
-  addAddress,
-  deleteAddress,
-} = require('../controllers/addressController')
+// rest of the code ...
 
-router.route('/').get(getAddresses).post(addAddress)
-router.route('/:id').delete(deleteAddress) // add
+// call the addAddress function
+// when a POST request is made to http://localhost:8080/api/addresses/
+router.route('/').post(addAddress)
 
-module.exports = router
+// rest of the code ...
 ```
 
-This means that the endpoint to delete an addresses is `/api/addresses/:id`
+#### Test API route
+
+To test the endpoint, you can make a `POST` request to the endpoint using Postman App as follows:
+
+![6F2F1EA4-D574-4336-8D8F-E904F9DB105E](images/POST_postman.png)
+
+> 💡 **Tip:** Add a few more addresses to the database. For example, you can add an address for 'NUS School of Computing' with description 'Somewhere in NUS'. Take note of the ID returned by the `POST` request as you will need it to test the `PUT` and `DELETE` endpoints later on.
+
+### `PUT` - update an existing address
+
+#### Define `updateAddress` function
+
+In `addressController.js`, you will define another function that will handle the logic behind updating an existing address to the MongoDB database:
 
 ```js
-// addressController.js
-...
+// rest of the code ...
 
-// @desc   Delete an address
-// @route  DELETE /api/addresses/:id
-// @access Public
-const deleteAddress = async (req, res) => {
-  try {
-    const address = await Address.findById(req.params.id)
-    await address.deleteOne()
-    res.status(200).json({ message: 'Address removed' })
-  } catch (error) {
-    res.status(404).json({ message: 'Address not found' })
-  }
-}
-```
-
-To test the endpoint, you can try making a `DELETE` request as follow:
-
-![20F86C6A-D013-4C0F-8C7D-284A1AAF66EF_1_105_c](https://github.com/Punpun1643/CS3219-labs/assets/60144099/66de1d0a-6cee-478c-ab3e-de90cab06d50)
-
-### 5.6 `PUT` - update an address
-
-```js
-// addressRoute.js
-
-const express = require('express')
-const router = express.Router()
-
-const {
-  getAddresses,
-  addAddress,
-  deleteAddress,
-  editAddress,
-} = require('../controllers/addressController')
-
-router.route('/').get(getAddresses).post(addAddress)
-router.route('/:id').delete(deleteAddress).put(editAddress)
-
-module.exports = router
-```
- 
-```js
-// addressController.js
-
-// @desc Edit an address
-// @route PUT /api/addresses/:id
-// @access Public
-
-const editAddress = async (req, res) => {
+// @desc    Update an address
+// @route   PUT /api/addresses
+// @access  Public
+const updateAddress = async (req, res) => {
   const { title, description } = req.body
 
+  // validate request body
   if (!title || !description) {
     return res.status(400).json({ message: 'Please enter all fields.' })
   }
 
   try {
+    // function provided by mongoose to find an
+    // Address document with a given ID
+    // req.params.id is retrieved from /:id in route
     const address = await Address.findById(req.params.id)
 
+    // update the document
     address.title = title
     address.description = description
 
+    // function provided by mongoose to
+    // save the changes made to a document
     await address.save()
 
-    res.status(201).json({
+    // return the updated address in JSON format
+    // with success status 200
+    res.status(200).json({
       _id: address._id,
       title: address.title,
       description: address.description,
@@ -639,41 +554,139 @@ const editAddress = async (req, res) => {
     res.status(400).json({ message: 'Invalid address data.' })
   }
 }
+
+// export controller functions to be used in corresponding route
+module.exports = { fetchAllAddresses, addAddress, updateAddress }
 ```
 
-To test the endpoint, you can try making a `PUT` request as follow:
+#### Define API route
 
-![CF3E013F-AF27-4A88-8DBB-34D5690A0A8F_1_105_c](https://github.com/Punpun1643/CS3219-labs/assets/60144099/de6b0169-5437-4304-80d8-bb4b657ea85a)
-
-## Part 6: Integration with the frontend
-
-### Install `axios`
-
-We will use `axios` to make the HTTP requests from the frontend.
-
-To install `axios`, at the root directory, run the command:
-
-```
-npm install axios
-```
-
-Remember to import it in the file where you are making requests.
-
-### 6.1 Fetch all addresses
-
-To fetch all addresses, we can make a `GET` request to `http://localhost:8080/api/addresses/` as follow:
+In `addressRoutes.js`, define another route as follows.
 
 ```js
-// AddressCardList.jsx
-...
+// rest of the code ...
+
+const { fetchAllAddresses, addAddress, updateAddress } = require('../controllers/addressController')
+
+// rest of the code ...
+
+// call the updateAddress function
+// when a PUT request is made to http://localhost:8080/api/addresses/:id
+router.route('/:id').put(updateAddress)
+
+// rest of the code ...
+```
+
+#### Test API route
+
+To test the endpoint, you can make a `PUT` request to the endpoint using Postman App as follows.  
+
+In this example, the ID we want to update is `64c7dd8ec95846d56c68e081`. Note that you must make a request to the endpoint with the ID of the address that you want to update:
+
+![CF3E013F-AF27-4A88-8DBB-34D5690A0A8F_1_105_c](images/PUT_postman.png)
+
+### `DELETE` - delete an existing address
+
+#### Define `deleteAddress` function
+
+In `addressController.js`, you will define another function that will handle the logic behind deleting an existing address to the MongoDB database:
+
+```js
+// rest of the code ...
+
+// @desc    Delete an address
+// @route   DELETE /api/addresses
+// @access  Public
+const deleteAddress = async (req, res) => {
+  try {
+    // function provided by mongoose to find an
+    // Address document with a given ID
+    // req.params.id is retrieved from /:id in route
+    const address = await Address.findById(req.params.id)
+    
+    // function provided by mongoose to delete a document
+    await address.deleteOne()
+      
+    
+    res.status(200).json({ message: 'Address removed' })
+  } catch (error) {
+    res.status(404).json({ message: 'Address not found' })
+  }
+}
+
+// export controller functions to be used in corresponding route
+module.exports = { fetchAllAddresses, addAddress, updateAddress, deleteAddress }
+```
+
+#### Define API route
+
+In `addressRoutes.js`, define another route as follows.
+
+```js
+// rest of the code ...
+
+const { fetchAllAddresses, addAddress, updateAddress, deleteAddress } = require('../controllers/addressController')
+
+// rest of the code ...
+
+// call the deleteAddress function
+// when a DELETE request is made to http://localhost:8080/api/addresses/:id
+router.route('/:id').delete(deleteAddress)
+
+// rest of the code ...
+```
+
+#### Test API route
+
+To test the endpoint, you can make a `DELETE` request to the endpoint using Postman App as follows.
+
+In this example, the ID we want to delete is `64c7dd52c95846d56c68e07e`. Note that you must make a request to the endpoint with the ID of the address that you want to update:
+
+![20F86C6A-D013-4C0F-8C7D-284A1AAF66EF_1_105_c](images/DELETE_postman.png)
+
+## Integrating with the Frontend
+
+> 📝 **Note:** For this section, you will be working in the root directory of the repository as you will be making changes in the frontend code. Make sure to navigate such that your working directory is `<directory of your choice>/SE-Toolbox-REST-API-MongoDB`.
+
+You will need to install [axios](https://www.npmjs.com/package/axios), a useful tool that will allow you to make requests to the backend server. You can do so by executing the command `npm install axios`.
+
+### Understanding the folder structure
+
+This is what the folder structor of the starter repository should look like at this point:
+
+```
+├── .next
+├── app
+    ├── page.js
+    ├── ...
+├── backend
+├── components
+├── node_modules
+├── public
+├── ...
+```
+
+- `components` contains reusable UI components
+- `app/page.js` is the file that contains the code for the single-page frontend application
+
+### Fetch all addresses
+
+To fetch and display all addresses on the frontend, you can make a `GET` request to `http://localhost:8080/api/addresses/` from the `AddressCardList` component in `AddressCardList.jsx`. This can be found in the `components` directory.
+
+Replace the existing `addresses` variable with the `useState` hook and fetch the data as follows:
+
+```jsx
+// rest of the code ...
 
 const [addresses, setAddresses] = useState([])
 
 useEffect(() => {
     const fetchAddresses = async () => {
       try {
+        // make a GET request to backend server via axios
         const response = await axios.get('http://localhost:8080/api/addresses')
-        setAddresses(response.data) // Update the addresses state with the retrieved data
+        // update the addresses state with the retrieved data
+        setAddresses(response.data) 
       } catch (error) {
         console.error('Error fetching addresses:', error)
       }
@@ -683,13 +696,14 @@ useEffect(() => {
 }, [addresses])
 ```
 
-### 6.2 Create an address
+### Add a new address
 
-To create an address, we can make a `POST` request to `http://localhost:8080/api/addresses/` as follow:
+To add a new address via the frontend, you can make the `InputButton` component in `InputButton.jsx` (in the `component` directory) fire a `POST` request to `http://localhost:8080/api/addresses/` when it is clicked. 
 
-```js
-// InputButton.jsx
+Here are some code snippets to help you get started:
 
+```jsx
+// rest of the code ...
 const onSubmit = async (data) => {
   try {
     await axios.post('http://localhost:8080/api/addresses', data)
@@ -700,54 +714,20 @@ const onSubmit = async (data) => {
 }
 ```
 
-`onSubmit` can be used as follow:
+`onSubmit` can be used as follows in `InputButton.jsx`:
 
-```js
-// InputButton.jsx
-
+```jsx
 <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-  ...
+  ... // form fields for title and description of address
+  ... // existing InputButton code
 </form>
 ```
 
-### 6.3 Delete an address
+### Update an existing address
 
-To delete an address, we can make a `DELETE` request to `http://localhost:8080/api/addresses/:id` as follow:
+To update an existing address, you can define another `onSubmit` function that makes a `PUT` request to `http://localhost:8080/api/addresses/:id`
 
-```js
-// Delete.jsx
-
-...
-
-const handleDeleteAddress = async () => {
-    try {
-      await axios.delete(
-        `http://localhost:8080/api/addresses/${props.address._id}`,
-      )
-    } catch (error) {
-      console.error('Error deleting address:', error)
-    }
-  }
-
-...
-
-```
-
-`handleDeleteAddress` can be used as follow:
-
-```js
-// Delete.jsx
-
-<AlertDialogAction onClick={handleDeleteAddress}>Continue</AlertDialogAction>
-```
-
-### 6.4 Edit an address
-
-To edit an address, we can make a `PUT` request to `http://localhost:8080/api/addresses/:id` as follow:
-
-```js
-// Edit.jsx
-
+```jsx
 const onSubmit = async (data) => {
   try {
     await axios.put(
@@ -761,15 +741,38 @@ const onSubmit = async (data) => {
 }
 ```
 
-## Resources
+### Delete an existing address
+
+To delete an existing address, you can define a click handler that makes a `DELETE` request to `http://localhost:8080/api/addresses/:id`
+
+```jsx
+const handleDeleteAddress = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/api/addresses/${props.address._id}`,
+      )
+    } catch (error) {
+      console.error('Error deleting address:', error)
+    }
+  }
+```
+
+Here is one example of how`handleDeleteAddress` can be used:
+
+```jsx
+<AlertDialogAction onClick={handleDeleteAddress}>Continue</AlertDialogAction>
+```
+
+## References
+
+Here are some of the resources that were used in the making of this guide. You may find these reads to be useful in helping to further your understanding of REST APIs and the best ways to implement them.
 
 ### REST API
 
 - [Express web framework (Node.js/JavaScript)](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs)
-
 - [How to create a REST API with Express.js in Node.js](https://www.robinwieruch.de/node-express-server-rest-api/)
 
-## Best practices
+### Best practices
 
 - [Best practices for REST API design](https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/)
 - [REST API Best Practices – REST Endpoint Design Examples](https://www.freecodecamp.org/news/rest-api-best-practices-rest-endpoint-design-examples/)
