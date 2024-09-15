@@ -267,7 +267,6 @@ const connectDB = async () => {
 module.exports = connectDB
 ```
 
-<!-- Again, make sure to read the inline comments to gain a better understanding of how setting up a connection to MongoDB works. -->
 
 Now, you will need to make use of this `connectDB` function in the backend entrypoint `index.js`. Make the following changes to `index.js` to connect to the MongoDB database when starting up the backend server:
 
