@@ -434,7 +434,7 @@ app.use('/api/addresses', require('./routes/addressRoutes'))
 
 To test whether the endpoint works correctly, you can use Postman App to make a `GET` request to `localhost:8080/api/addresses/`
 
-The output should be as follows if there is no address object in the MongoDB database yet:
+The output should be as follows if there is no address object in the MongoDB database:
 
 ![2C62B77F-267D-4EEC-9D84-ABC86CD7C314](https://github.com/Punpun1643/CS3219-labs/assets/60144099/a6ada0a4-e38f-48cf-8b0a-11f8ceb3b200)
 
