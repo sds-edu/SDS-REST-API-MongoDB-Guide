@@ -1,4 +1,4 @@
-# CS3219 Guide to REST APIs
+# CS3219 SE Toolbox: REST API with MongoDB
 
 ## Introduction
 
@@ -137,11 +137,14 @@ npm i --save cors
 // install nodemon locally as a development dependency
 npm i --save-dev nodemon
 ```
+
+In case of installation failures, you may replace the corresponding commands with `npm install` (e.g., `npm install dotenv`).  
+
 > 📝 **Note:** You can read more about the differences between --save and --save-dev [here](https://www.geeksforgeeks.org/what-is-the-difference-between-save-and-save-dev-in-node-js/) if you are interested.
 
 ### 4. Set up Express.js server
 
-Create an `index.js` file in the `backend` directory and add the following lines of code. Make sure to read the inline comments to gain a better understanding of how the Express.js server works:
+Create an `index.js` file in the `backend` directory and add the following lines of code. Make sure to always read the inline comments to gain a better understanding of how certain components works (e.g., Express.js server in this case):
 
 ```js
 // import the dependencies required for Express.js
@@ -182,8 +185,6 @@ app.get('/', (req, res) => {
 // export Express.js application to be used elsewhere
 module.exports = app
 ```
-
-Make sure to read the inline comments to gain a better understanding of how the Express.js server works.
 
 
 ### 5. Start up the backend
@@ -245,7 +246,7 @@ cd config
 touch db.js
 ```
 
-In your `db.js` file, add the following code. Make sure to read the inline comments to gain a better understanding of how setting up a connection to MongoDB works:
+In your `db.js` file, add the following code. Again, make sure to read the inline comments to gain a better understanding of how setting up a connection to MongoDB works:
 ```js
 // import dependencies required for mongoose
 const mongoose = require('mongoose')
@@ -266,7 +267,6 @@ const connectDB = async () => {
 module.exports = connectDB
 ```
 
-Make sure to read the inline comments to gain a better understanding of how setting up a connection to MongoDB works.
 
 Now, you will need to make use of this `connectDB` function in the backend entrypoint `index.js`. Make the following changes to `index.js` to connect to the MongoDB database when starting up the backend server:
 
@@ -330,6 +330,8 @@ mkdir models
 // create routes folder
 mkdir routes
 ```
+
+Also, please ensure that MongoDB is running, and then execute `npm run dev` from the `backend` directory. Note that this execution is different from the previous frontend execution. (In our case, the frontend listens to port 3000, and the backend listens to port 8080.)
 
 ### 1. `GET` - Fetch all addresses
 
@@ -435,7 +437,7 @@ The output should be as follows if there is no address object in the MongoDB dat
 
 ![2C62B77F-267D-4EEC-9D84-ABC86CD7C314](https://github.com/Punpun1643/CS3219-labs/assets/60144099/a6ada0a4-e38f-48cf-8b0a-11f8ceb3b200)
 
-However, if you were to manually add an address first, it would look as follows:
+However, if you were to manually add an address later, it would look as follows:
 
 ![8F778A9A-2511-4588-BC36-844F25992B1C](https://github.com/Punpun1643/CS3219-labs/assets/60144099/fee6ff86-f10d-4ce8-b019-9715de4d44dc)
 
@@ -503,7 +505,7 @@ router.route('/').post(addAddress)
 
 #### Test API route
 
-To test the endpoint, you can make a `POST` request to the endpoint using Postman App as follows:
+To test the endpoint, you can make a `POST` request to the endpoint using Postman App as follows (new info should be under `raw`, `json` input format in Postman):
 
 ![6F2F1EA4-D574-4336-8D8F-E904F9DB105E](images/POST_postman.png)
 
