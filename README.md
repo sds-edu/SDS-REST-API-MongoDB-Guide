@@ -4,7 +4,7 @@
 
 Welcome to CS3219! This guide will introduce you to REST APIs and how to implement them by walking you through the development of a full stack address book application with CRUD functionalities (similar to CS2103, but with Javascript instead of Java). 
 
-![5E11A61D-6BAC-4269-974E-3D85946295DC](https://github.com/Punpun1643/CS3219-labs/assets/60144099/bc88876b-1df8-4835-b9d4-bd6961b3f782)
+![Addressbook UI](images/addressbook.jpeg)
 
 ### Tech Stack
 
@@ -316,7 +316,7 @@ This is what the folder structure of the `backend` directory will look like by t
 - `models` contains your mongoose Models, which essentially act as an interface to interact with different schemas in the MongoDB database.
 - `routes` contains files that specify the endpoints supported by the backend server.
 
-![backend-structure](https://github.com/Punpun1643/CS3219-labs/assets/60144099/7abd018e-9807-4a96-91ee-613d18b3c602)
+![backend-structure](images/routes_controller.png)
 
 You can create these 3 new folders via your IDE or by executing the following commands:
 
@@ -435,11 +435,11 @@ To test whether the endpoint works correctly, you can use Postman App to make a 
 
 The output should be as follows if there is no address object in the MongoDB database:
 
-![2C62B77F-267D-4EEC-9D84-ABC86CD7C314](https://github.com/Punpun1643/CS3219-labs/assets/60144099/a6ada0a4-e38f-48cf-8b0a-11f8ceb3b200)
+![No address output](images/apiroute.jpeg)
 
 However, if you were to manually add an address later, it would look as follows:
 
-![8F778A9A-2511-4588-BC36-844F25992B1C](https://github.com/Punpun1643/CS3219-labs/assets/60144099/fee6ff86-f10d-4ce8-b019-9715de4d44dc)
+![Output with address added](images/postman.jpeg)
 
 ### 2. `POST` - Add a new address
 
@@ -507,7 +507,7 @@ router.route('/').post(addAddress)
 
 To test the endpoint, you can make a `POST` request to the endpoint using Postman App as follows (new info should be under `raw`, `json` input format in Postman):
 
-![Postman Post](images/POST_postman.png)
+![Postman POST](images/POST_postman.png)
 
 > 💡 **Tip:** Add a few more addresses to the database. For example, you can add an address for 'NUS School of Computing' with description 'Somewhere in NUS'. Take note of the ID returned by the `POST` request as you will need it to test the `PUT` and `DELETE` endpoints later on.
 
@@ -585,7 +585,7 @@ To test the endpoint, you can make a `PUT` request to the endpoint using Postman
 
 In this example, the ID we want to update is `64c7dd8ec95846d56c68e081`. Note that you must make a request to the endpoint with the ID of the address that you want to update:
 
-![CF3E013F-AF27-4A88-8DBB-34D5690A0A8F_1_105_c](images/PUT_postman.png)
+![Postman PUT](images/PUT_postman.png)
 
 ### `DELETE` - delete an existing address
 
@@ -644,7 +644,7 @@ To test the endpoint, you can make a `DELETE` request to the endpoint using Post
 
 In this example, the ID we want to delete is `64c7dd52c95846d56c68e07e`. Note that you must make a request to the endpoint with the ID of the address that you want to update:
 
-![20F86C6A-D013-4C0F-8C7D-284A1AAF66EF_1_105_c](images/DELETE_postman.png)
+![Postman DELETE](images/DELETE_postman.png)
 
 ## Integrating with the Frontend
 
