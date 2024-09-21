@@ -507,7 +507,7 @@ router.route('/').post(addAddress)
 
 To test the endpoint, you can make a `POST` request to the endpoint using Postman App as follows (new info should be under `raw`, `json` input format in Postman):
 
-![6F2F1EA4-D574-4336-8D8F-E904F9DB105E](images/POST_postman.png)
+![Postman Post](images/POST_postman.png)
 
 > 💡 **Tip:** Add a few more addresses to the database. For example, you can add an address for 'NUS School of Computing' with description 'Somewhere in NUS'. Take note of the ID returned by the `POST` request as you will need it to test the `PUT` and `DELETE` endpoints later on.
 
