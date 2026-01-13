@@ -2,31 +2,33 @@
 
 ## Introduction
 
-Welcome to CS3219! This guide will introduce you to REST APIs and how to implement them by walking you through the development of a full stack address book application with CRUD functionalities (similar to CS2103, but with Javascript instead of Java). 
+Welcome to CS3219! This guide will introduce you to REST APIs and how to implement them by walking you through the development of a full stack address book application with CRUD functionalities (similar to CS2103, but with Javascript instead of Java).
 
 ![Addressbook UI](images/addressbook.jpeg)
 
 ### Tech Stack
 
-###### Frontend
+- **Frontend**
 
-- [Next.js](https://nextjs.org/)
+  - [Next.js](https://nextjs.org/)
 
-###### Backend
+- **Backend**
 
-- [Express.js](https://expressjs.com/)
-- [MongoDB](https://www.mongodb.com/)
+  - [Express.js](https://expressjs.com/)
+  - [MongoDB](https://www.mongodb.com/)
 
-###### Testing
+- **Testing**
 
-- [Postman](https://www.postman.com/)
+  - [Postman](https://www.postman.com/)
 
 ### Prerequisites
 
 Please ensure that you have the following installed on your computer before continuing with the rest of the guide:
 
 1. Install [Node.js LTS](https://nodejs.org/en/download)
-> 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is 18.X.X. If you have a different version of Node.js installed and you need to change it, there is a useful guide [here](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/development_environment#installing_node) on how to do so using nvm.
+
+    > 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is 22.X.X. If you have a different version of Node.js installed and you need to change it, refer to  [this guide](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/development_environment#installing_node) on how to do so using nvm.
+
 2. Install [MongoDB Community Edition](https://www.mongodb.com/docs/manual/administration/install-community/) - Follow the installation guide for your OS
 3. Install [Git](https://git-scm.com/downloads)
 4. Install [Postman App](https://www.postman.com/downloads/)
@@ -51,12 +53,11 @@ A RESTful API (Representational State Transfer API) is a web-based architectural
 | Endpoint | One end of a communication channel in an API, typically identified by a URI, where requests are sent to access resource or trigger actions from web applications or servers, with responses returned to complete the interaction. Basically, the place that APIs send requests and where the resource lives, is called an endpoint. |
 | Collection | Resources can be organized into collections, each of which is uniform, containing only a single type of resource, and unordered. |
 
-
 - The endpoint refers directly to the resource and the HTTP verbs (e.g. `GET`, `POST`, `PUT`, `DELETE`) specify the actions.
 - Typically takes 2 URI per resource
-    - One for the whole collection
-    - One for a single object in that collection
-    - For example, consider a fictional resource called `address` that contains a list of addresses. The URI for the collection would be `/addresses` and the URI for a single address would be `/addresses/:id` where `:id` is the unique identifier of the address.
+  - One for the whole collection
+  - One for a single object in that collection
+  - For example, consider a fictional resource called `address` that contains a list of addresses. The URI for the collection would be `/addresses` and the URI for a single address would be `/addresses/:id` where `:id` is the unique identifier of the address.
 - You can also nest collections
 
 ## Understanding MongoDB Database Schema and JSON Structure
@@ -68,6 +69,7 @@ MongoDB is a NoSQL document database that stores data in flexible, JSON-like doc
 ### MongoDB Collections and Documents
 
 In MongoDB:
+
 - **Database**: A container for collections (similar to a database in SQL)
 - **Collection**: A group of MongoDB documents (similar to a table in SQL)
 - **Document**: A record in MongoDB, stored in BSON format (similar to a row in SQL)
@@ -100,6 +102,7 @@ MongoDB documents are stored as BSON but represented as JSON. Here's an example 
 ```
 
 Key features of MongoDB JSON documents:
+
 - **_id field**: Every document has a unique `_id` field (auto-generated if not provided)
 - **Flexible schema**: Documents in the same collection can have different fields
 - **Nested objects**: Support for embedded documents and arrays (like the `contacts` array above)
@@ -119,6 +122,7 @@ For our address book application, each address document will have this structure
 ```
 
 The schema is simple but demonstrates MongoDB's document structure:
+
 - `_id`: Unique identifier (automatically generated)
 - `title`: String field for the address label
 - `description`: String field for the actual address details
@@ -130,6 +134,7 @@ While the main guide uses MongoDB Community Edition (local installation), MongoD
 ### What is MongoDB Atlas?
 
 MongoDB Atlas is a fully managed cloud database service that handles database operations, security, and scaling automatically. It's perfect for applications that need:
+
 - Cloud accessibility
 - Automatic backups
 - Built-in security features
@@ -139,14 +144,20 @@ MongoDB Atlas is a fully managed cloud database service that handles database op
 
 #### Step 1: Sign up and Choose Deployment Option
 
-1. Visit [MongoDB Atlas](https://www.mongodb.com/atlas) and create a free account
-2. Once logged in, you'll see deployment options as shown below:
+1. Visit [MongoDB Atlas](https://www.mongodb.com/atlas) and create a free account.
 
-![MongoDB Atlas Deployment Options](images/img1.png)
+2. If you're logging in for the first time, Atlas sometimes skips the next two steps.
 
-   - **M0 (FREE)**: Perfect for learning and small applications
-   - **M10 ($0.08/hour)**: For production applications
-   - **SERVERLESS ($0.10/M reads)**: Pay-per-use model
+    - Select the organization that contains your desired project from the  Organizations menu in the navigation bar. Select your desired project from the Projects menu in the navigation bar. Click Project Overview in the sidebar.
+    - Create a cluster. Click the Create button to create a cluster.
+
+3. Once logged in, you'll see deployment options as shown below:
+
+![MongoDB Atlas Deployment Options](images/pic1.1.png)
+
+- **M0 (FREE)**: Perfect for learning and small applications
+- **M10 ($0.08/hour)**: For production applications
+- **SERVERLESS ($0.10/M reads)**: Pay-per-use model
 
 For this tutorial, select the **FREE** M0 option.
 
@@ -154,34 +165,39 @@ For this tutorial, select the **FREE** M0 option.
 
 1. **Provider & Region**: Choose your cloud provider (AWS, Google Cloud, or Azure) and select a region closest to your users
 2. **Cluster Name**: Give your cluster a descriptive name (e.g., "Cluster0" or "AddressBookDB")
-3. Click **"Create"** to deploy your cluster
+3. (Optional) Keeping **“Automate security setup”** enabled automatically adds your current IP address to enable local connectivity.
+4. Click **"Create Deployment"** to deploy your cluster
 
-Once created, you'll see your cluster in the Database Deployments view:
+![MongoDB Atlas Configurations](images/pic1.2.png)
 
-![Atlas Database Deployments](images/img2.png)
+Once created, you'll see your cluster in the Database Clusters view:
 
-#### Step 3: Set Up Connection Security
+![Atlas Database Deployments](images/pic1.3.png)
 
-Once your cluster is created, you need to configure security. You'll see a security setup modal:
+#### Step 3: Connect to the Cluster
 
-![Atlas Security Setup](images/img3.png)
+Once your cluster is created, you need to configure security. You'll see a setup modal:
+
+![Atlas Security Setup](images/pic2.2.png)
 
 ##### Add Connection IP Address
+
 1. MongoDB Atlas requires you to whitelist IP addresses that can connect
 2. You'll see a prompt: "Add a connection IP address"
 3. For development, you can add your current IP or use `0.0.0.0/0` (allow access from anywhere - use cautiously)
 
 ##### Create Database User
-1. Click "Create a database user"
-2. Choose **"Password"** authentication method
-3. Enter a **username** (e.g., `dbUser`)
-4. Either create a secure password or use "Autogenerate Secure Password"
-5. **Important**: Copy and save these credentials - you'll need them for your connection string
-6. The user will have `atlasAdmin` permissions by default
+
+1. Enter a **username** (e.g., `dbUser`)
+2. Either create a secure password or use "Autogenerate Secure Password"
+3. **Important**: Copy and save these credentials - you'll need them for your connection string
+4. The user will have `atlasAdmin` permissions by default
 
 #### Step 4: Choose Connection Method
 
-After setting up security, you'll see connection options as shown below:
+After setting up security, you'll see connection options.
+
+##### Option 1: Continue via the setup modal
 
 ![Atlas Connection Methods](images/img4.png)
 
@@ -191,13 +207,23 @@ After setting up security, you'll see connection options as shown below:
 
 Select **"Drivers"** to get your connection string.
 
+##### Option 2: Application Development Pane
+
+1. Navigate to the Project Overview page.
+2. From the **Application Development** Pane, click on "Get connection string".
+
+![Atlas Application Development](images/pic2.3.png)
+
 #### Step 5: Get Your Connection String
 
-1. Select your driver version (Node.js 4.1 or later)
+1. Select your driver version (Node.js 6.7 or later)
+
 2. You'll see a connection string like:
-```
-mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/<database_name>?retryWrites=true&w=majority
-```
+
+    ```text
+    mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/<database_name>?retryWrites=true&w=majority
+    ```
+
 3. Replace `<password>` with the password you created
 4. Replace `<database_name>` with your desired database name (e.g., "addressbook")
 
@@ -225,14 +251,13 @@ MONGODB_URI="mongodb+srv://dbUser:yourpassword@cluster0.xxxxx.mongodb.net/addres
 ### Managing Your Atlas Cluster
 
 Once connected, you can:
+
 1. **Browse Collections**: View your data through the Atlas interface
 2. **Monitor Performance**: Track database operations and performance metrics
 3. **Set up Alerts**: Get notifications for important events
 4. **Scale Resources**: Upgrade your cluster as your application grows
 
 The Atlas interface provides a user-friendly way to visualize your JSON documents and manage your database without needing additional tools.
-
-
 
 ## Setting up the Frontend
 
@@ -242,7 +267,7 @@ We have created a starter repository for this guide [here](https://github.com/CS
 
 Fork this starter repository to your own Github account, then open your terminal and clone the forked repository into a directory of your choice.
 
-```
+```sh
 // navigate to directory of your choice
 cd <path to directory of your choice>
 
@@ -254,7 +279,7 @@ git clone https://github.com/<your github username>/SE-Toolbox-REST-API-MongoDB.
 
 Now that you have cloned the starter repository, you will need to navigate to it and install the dependencies required for the frontend of the application. The dependencies are listed in the `package.json` file in the root directory of the starter repository.
 
-```
+```sh
 // navigate to starter repository
 cd SE-Toolbox-REST-API-MongoDB
 
@@ -264,13 +289,13 @@ npm install
 
 ### 3. Start up the frontend
 
-You can now run the frontend of the application at `localhost:3000` by simply executing the command `npm run dev`.
+You can now run the frontend of the application at <http://localhost:3000> by simply executing the command `npm run dev`.
 
 ## Setting up the Backend
 
 ### 1. Initialise the backend directory
 
-You will now need to create a new folder `backend` within the starter repository to contain the source code for the backend of the application. 
+You will now need to create a new folder `backend/` within the starter repository to contain the source code for the backend of the application.
 
 You can do so via your IDE or by executing the command `mkdir backend`
 
@@ -280,13 +305,14 @@ You can do so via your IDE or by executing the command `mkdir backend`
 
 You can create this file in the backend directory that you just created by running `npm init`. The steps are as follows:
 
-```
+```sh
 // navigate to backend directory
 cd backend
 
 // create package.json file
 npm init
 ```
+
 > 💡**Tip:** `npm init` is an interactive command that will prompt you for some information. You can accept all the default arguments for this application.
 
 ### 3. Install the required dependencies
@@ -301,7 +327,7 @@ In addition, you will also be installing the following tools that will help to e
 
 You can install all these dependencies by executing these commands:
 
-```
+```sh
 // install Express.js locally
 npm i --save express
 
@@ -315,7 +341,7 @@ npm i --save cors
 npm i --save-dev nodemon
 ```
 
-In case of installation failures, you may replace the corresponding commands with `npm install` (e.g., `npm install dotenv`).  
+In case of installation failures, you may replace the corresponding commands with `npm install` (e.g., `npm install dotenv`).
 
 > 📝 **Note:** You can read more about the differences between --save and --save-dev [here](https://www.geeksforgeeks.org/what-is-the-difference-between-save-and-save-dev-in-node-js/) if you are interested.
 
@@ -333,14 +359,14 @@ const cors = require('cors')
 // store it in the app variable
 const app = express()
 
-// allow cross-origin requests to reach the Expres.js server
+// allow cross-origin requests to reach the Express.js server
 // from localhost:3000, which is your frontend domain
 app.options(
-  '*',
+  /.*/,
   cors({
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200,
-  }), 
+  }),
 )
 app.use(cors())
 
@@ -353,7 +379,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}...`)
 })
 
-// when a GET request is made to http://localhost:8080/, 
+// when a GET request is made to http://localhost:8080/,
 // the response will be { message: 'Hello World' } in JSON format
 app.get('/', (req, res) => {
   res.json({ message: 'Hello World' })
@@ -362,7 +388,6 @@ app.get('/', (req, res) => {
 // export Express.js application to be used elsewhere
 module.exports = app
 ```
-
 
 ### 5. Start up the backend
 
@@ -379,29 +404,35 @@ package.json
 // rest of the code ...
 ```
 
-Adding this script means that whenever you execute `npm run dev` in the backend directory, the `nodemon` tool will start up your backend server via the entry point `index.js`, which you had just set up in the previous step. 
+Adding this script means that whenever you execute `npm run dev` in the backend directory, the `nodemon` tool will start up your backend server via the entry point `index.js`, which you had just set up in the previous step.
 
 As such, you can execute the command `npm run dev` to run the backend server at `localhost:8080`.
 
 ## Setting up the Database
 
-> 📝 **Note:** In this section, you will continue to work in the `backend` directory. 
+> 📝 **Note:** In this section, you will continue to work in the `backend` directory.
 
 ### 1. Install the required dependencies
 
-You will need to install [mongoose](https://mongoosejs.com/docs/guide.html), which is an Object Relational Mapping (ORM) tool that makes it easier and simpler for developers to interact with MongoDB functionalities. 
+You will need to install [mongoose](https://mongoosejs.com/docs/guide.html), which is an Object Relational Mapping (ORM) tool that makes it easier and simpler for developers to interact with MongoDB functionalities.
 
-You can do so via executing the command `npm install mongoose`.
+You can do so via executing the command:
+
+```sh
+npm install mongoose
+```
 
 ### 2. Initialise `.env` file for environmental variables
 
 In your `backend` directory, create a file called `.env`. You can do so via the your IDE or by executing the command `touch .env`.
 
 Then, add the following content to your `.env` file:
-```
+
+```env
 PORT=8080
 MONGODB_URI="mongodb://127.0.0.1:27017/cs3219-rest-api-example"
 ```
+
 Here, you are specifying the connection string that can be used to connect to your database. The format for this connection string is `<standard_prefix>://<host>:<port>/<database_name>`. In this example:
 
 - `<standard_prefix>` is simply `mongodb`, which refers to the MongoDB Community Edition Server running on your computer.
@@ -415,7 +446,8 @@ You can read more about MongoDB connection strings [here](https://www.mongodb.co
 You will need to create a folder called `config` under your `backend` directory. You can do so via your IDE or by executing the command `mkdir config`.
 
 Then, you will need to create a file called `db.js`. You can do so via your IDE or by executing the following commands:
-```
+
+```sh
 // navigate to config directory
 cd config
 
@@ -424,6 +456,7 @@ touch db.js
 ```
 
 In your `db.js` file, add the following code. Again, make sure to read the inline comments to gain a better understanding of how setting up a connection to MongoDB works:
+
 ```js
 // import dependencies required for mongoose
 const mongoose = require('mongoose')
@@ -444,7 +477,6 @@ const connectDB = async () => {
 module.exports = connectDB
 ```
 
-
 Now, you will need to make use of this `connectDB` function in the backend entrypoint `index.js`. Make the following changes to `index.js` to connect to the MongoDB database when starting up the backend server:
 
 ```js
@@ -462,9 +494,9 @@ const connectDB = require('./config/db')
 connectDB()
 
 
-/** 
+/**
  * code to initialize the Express.js application store it in the app variable ... (same as before)
- * code to allow cross-origin requests to reach the Express.js server ... (same as before) 
+ * code to allow cross-origin requests to reach the Express.js server ... (same as before)
 **/
 
 // THEN replace const PORT = 8080 with the following:
@@ -477,11 +509,11 @@ const PORT = process.env.PORT || 8080
 
 ## Implementing REST API
 
-> 📝**Note:** In this section, you will continue to work in the root of the `backend` directory. 
+> 📝**Note:** In this section, you will continue to work in the root of the `backend` directory.
 
 This is what the folder structure of the `backend` directory will look like by the end of this section:
 
-```
+```text
 ├── backend
 │   ├── config
 │   ├── controllers
@@ -497,7 +529,7 @@ This is what the folder structure of the `backend` directory will look like by t
 
 You can create these 3 new folders via your IDE or by executing the following commands:
 
-```
+```sh
 // create controllers folder
 mkdir controllers
 
@@ -508,7 +540,13 @@ mkdir models
 mkdir routes
 ```
 
-Also, please ensure that MongoDB is running, and then execute `npm run dev` from the `backend` directory. Note that this execution is different from the previous frontend execution. (In our case, the frontend listens to port 3000, and the backend listens to port 8080.)
+Also, please ensure that MongoDB is running, and then from the `backend` directory execute:
+
+```sh
+npm run dev
+```
+
+Note that this execution is different from the previous frontend execution. (In our case, the frontend listens to port 3000, and the backend listens to port 8080.)
 
 ### 1. `GET` - Fetch all addresses
 
@@ -549,7 +587,7 @@ const fetchAllAddresses = async (req, res) => {
   // function provided by Mongoose to fetch all Address documents
   const addresses = await Address.find({})
 
-  // return all addresses in JSON format 
+  // return all addresses in JSON format
   // with success status 200
   res.status(200).json(addresses)
 }
@@ -581,8 +619,8 @@ Then, you can add the following to `index.js` to connect the newly created addre
 
 ```js
 /**
- * Import required dependencies, connect db and initialize Express.js application ... (same as before). i.e. same up to: 
- * app.use(cors()) 
+ * Import required dependencies, connect db and initialize Express.js application ... (same as before). i.e. same up to:
+ * app.use(cors())
  **/
 
 // ADD the following code:
@@ -597,9 +635,9 @@ app.use(express.urlencoded({ extended: false }))
  * app.listen(PORT, () => {...})
  **/
 
-// ADD the following code: 
+// ADD the following code:
 
-// use the address router to handle requests 
+// use the address router to handle requests
 // at http://localhost:8080/api/addresses
 app.use('/api/addresses', require('./routes/addressRoutes'))
 
@@ -658,6 +696,7 @@ const addAddress = async (req, res) => {
   }
 }
 
+// Update the code line below
 // export controller functions to be used in corresponding route
 module.exports = { fetchAllAddresses, addAddress }
 ```
@@ -669,6 +708,7 @@ In `addressRoutes.js`, define another route as follows.
 ```js
 // rest of the code ...
 
+//Update the code line below
 const { fetchAllAddresses, addAddress } = require('../controllers/addressController')
 
 // rest of the code ...
@@ -734,6 +774,7 @@ const updateAddress = async (req, res) => {
   }
 }
 
+// Update the code line below
 // export controller functions to be used in corresponding route
 module.exports = { fetchAllAddresses, addAddress, updateAddress }
 ```
@@ -745,6 +786,7 @@ In `addressRoutes.js`, define another route as follows.
 ```js
 // rest of the code ...
 
+//Update the code line below
 const { fetchAllAddresses, addAddress, updateAddress } = require('../controllers/addressController')
 
 // rest of the code ...
@@ -758,7 +800,7 @@ router.route('/:id').put(updateAddress)
 
 #### Test API route
 
-To test the endpoint, you can make a `PUT` request to the endpoint using Postman App as follows.  
+To test the endpoint, you can make a `PUT` request to the endpoint using Postman App as follows.
 
 In this example, the ID we want to update is `64c7dd8ec95846d56c68e081`. Note that you must make a request to the endpoint with the ID of the address that you want to update:
 
@@ -782,17 +824,18 @@ const deleteAddress = async (req, res) => {
     // Address document with a given ID
     // req.params.id is retrieved from /:id in route
     const address = await Address.findById(req.params.id)
-    
+
     // function provided by mongoose to delete a document
     await address.deleteOne()
-      
-    
+
+
     res.status(200).json({ message: 'Address removed' })
   } catch (error) {
     res.status(404).json({ message: 'Address not found' })
   }
 }
 
+// Update the code line below
 // export controller functions to be used in corresponding route
 module.exports = { fetchAllAddresses, addAddress, updateAddress, deleteAddress }
 ```
@@ -804,6 +847,7 @@ In `addressRoutes.js`, define another route as follows.
 ```js
 // rest of the code ...
 
+// Update the code line below
 const { fetchAllAddresses, addAddress, updateAddress, deleteAddress } = require('../controllers/addressController')
 
 // rest of the code ...
@@ -827,13 +871,17 @@ In this example, the ID we want to delete is `64c7dd52c95846d56c68e07e`. Note th
 
 > 📝 **Note:** For this section, you will be working in the root directory of the repository as you will be making changes in the frontend code. Make sure to navigate such that your working directory is `<directory of your choice>/SE-Toolbox-REST-API-MongoDB`.
 
-You will need to install [axios](https://www.npmjs.com/package/axios), a useful tool that will allow you to make requests to the backend server. You can do so by executing the command `npm install axios`.
+You will need to install [axios](https://www.npmjs.com/package/axios), a useful tool that will allow you to make requests to the backend server. You can do so by executing the command
+
+```sh
+npm install axios
+```
 
 ### Understanding the folder structure
 
 This is what the folder structor of the starter repository should look like at this point:
 
-```
+```text
 ├── .next
 ├── app
     ├── page.js
@@ -850,11 +898,16 @@ This is what the folder structor of the starter repository should look like at t
 
 ### Fetch all addresses
 
-To fetch and display all addresses on the frontend, you can make a `GET` request to `http://localhost:8080/api/addresses/` from the `AddressCardList` component in `AddressCardList.jsx`. This can be found in the `components` directory.
+To fetch and display all addresses on the frontend, you can make a `GET` request to `http://localhost:8080/api/addresses/` from the `AddressCardList` component in `AddressCardList.jsx`. This can be found in the `components/` directory.
 
 Replace the existing `addresses` variable with the `useState` hook and fetch the data as follows:
 
 ```jsx
+// use client header
+
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+
 // rest of the code ...
 
 const [addresses, setAddresses] = useState([])
@@ -865,7 +918,7 @@ useEffect(() => {
         // make a GET request to backend server via axios
         const response = await axios.get('http://localhost:8080/api/addresses')
         // update the addresses state with the retrieved data
-        setAddresses(response.data) 
+        setAddresses(response.data)
       } catch (error) {
         console.error('Error fetching addresses:', error)
       }
@@ -877,7 +930,7 @@ useEffect(() => {
 
 ### Add a new address
 
-To add a new address via the frontend, you can make the `InputButton` component in `InputButton.jsx` (in the `component` directory) fire a `POST` request to `http://localhost:8080/api/addresses/` when it is clicked. 
+To add a new address via the frontend, the `InputButton` component in `component/InputButton.jsx` will fire a `POST` request to `http://localhost:8080/api/addresses/` when it is clicked.
 
 Here are some code snippets to help you get started:
 
@@ -897,17 +950,17 @@ const onSubmit = async (data) => {
 
 ```jsx
 <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-  ... // form fields for title and description of address
+  ... // add code for form fields that take title and description of address
   ... // existing InputButton code
 </form>
 ```
 
 ### Update an existing address
 
-To update an existing address, you can define another `onSubmit` function that makes a `PUT` request to `http://localhost:8080/api/addresses/:id`
+To update an existing address, you can define `handleEditAddress` function that makes a `PUT` request to `http://localhost:8080/api/addresses/:id`. This can be placed and integrated with `components/AddressCard.jsx`.
 
 ```jsx
-const onSubmit = async (data) => {
+const handleEditAddress = async (data) => {
   try {
     await axios.put(
       `http://localhost:8080/api/addresses/${props.address._id}`,
@@ -920,9 +973,10 @@ const onSubmit = async (data) => {
 }
 ```
 
+
 ### Delete an existing address
 
-To delete an existing address, you can define a click handler that makes a `DELETE` request to `http://localhost:8080/api/addresses/:id`
+To delete an existing address, you can define a click handler that makes a `DELETE` request to `http://localhost:8080/api/addresses/:id`. This can be placed and integrated with `components/AddressCard.jsx`.
 
 ```jsx
 const handleDeleteAddress = async () => {
@@ -936,9 +990,9 @@ const handleDeleteAddress = async () => {
   }
 ```
 
-Here is one example of how`handleDeleteAddress` can be used:
+Here is an example of how`handleDeleteAddress` can be used when the user must confirm the delete action:
 
-```jsx
+```html
 <AlertDialogAction onClick={handleDeleteAddress}>Continue</AlertDialogAction>
 ```
 
@@ -955,7 +1009,6 @@ Here are some of the resources that were used in the making of this guide. You m
 
 - [Best practices for REST API design](https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/)
 - [REST API Best Practices – REST Endpoint Design Examples](https://www.freecodecamp.org/news/rest-api-best-practices-rest-endpoint-design-examples/)
-
 
 ### MongoDB Atlas Setup
 
