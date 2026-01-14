@@ -27,7 +27,7 @@ Please ensure that you have the following installed on your computer before cont
 
 1. Install [Node.js LTS](https://nodejs.org/en/download)
 
-    > 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is 22.X.X. If you have a different version of Node.js installed and you need to change it, refer to  [this guide](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/development_environment#installing_node) on how to do so using nvm.
+    > 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is v24.13.0. If you have a different version of Node.js installed and you need to change it, refer to  [this guide](https://nodejs.org/en/download) on how to do so using nvm.
 
 2. Install [MongoDB Community Edition](https://www.mongodb.com/docs/manual/administration/install-community/) - Follow the installation guide for your OS
 3. Install [Git](https://git-scm.com/downloads)
