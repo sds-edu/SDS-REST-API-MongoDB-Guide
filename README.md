@@ -433,9 +433,7 @@ You can read more about MongoDB connection strings [here](https://www.mongodb.co
 
 If you want to use MongoDB Atlas instead of local MongoDB, update your `.env` file.
 
-> ⚠️ **Important Network Notice:** MongoDB Atlas connections are blocked on the NUS network. If you are using MongoDB Atlas, you must disconnect from the NUS network (including NUS Wi-Fi or nVPN) and connect using an alternative network.
-
-Otherwise, your application will fail to connect to the database even if your connection string is correct.
+> ⚠️ **Important Network Notice:** MongoDB Atlas connections are blocked on the NUS network. If you are using MongoDB Atlas, you must disconnect from the NUS network (including NUS Wi-Fi or nVPN) and connect using an alternative network. Otherwise, your application will fail to connect to the database even if your connection string is correct.
 
 ```env
 PORT=8080
