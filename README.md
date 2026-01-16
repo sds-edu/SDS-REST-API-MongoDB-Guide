@@ -27,7 +27,7 @@ Please ensure that you have the following installed on your computer before cont
 
 1. Install [Node.js LTS](https://nodejs.org/en/download)
 
-    > 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is v24.13.0. If you have a different version of Node.js installed and you need to change it, refer to  [this guide](https://nodejs.org/en/download) on how to do so using nvm.
+    > 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is v24.13.0. If you have a different version of Node.js installed and need to change it, visit the [Node.js download page](https://nodejs.org/en/download), select your operating system, package manager, and Node.js version from the dropdowns at the top of the page, then follow the provided instructions.
 
 2. Install [MongoDB Community Edition](https://www.mongodb.com/docs/manual/administration/install-community/) - Follow the installation guide for your OS
 3. Install [Git](https://git-scm.com/downloads)
@@ -226,16 +226,6 @@ Select **"Drivers"** to get your connection string.
 
 3. Replace `<password>` with the password you created
 4. Replace `<database_name>` with your desired database name (e.g., "addressbook")
-
-### Updating Your Application for Atlas
-
-If you want to use MongoDB Atlas instead of local MongoDB, update your `.env` file:
-
-```env
-PORT=8080
-# Replace the local connection string with your Atlas connection string
-MONGODB_URI="mongodb+srv://dbUser:yourpassword@cluster0.xxxxx.mongodb.net/addressbook?retryWrites=true&w=majority"
-```
 
 ### Atlas vs Local MongoDB: When to Use Which?
 
@@ -439,9 +429,28 @@ Here, you are specifying the connection string that can be used to connect to yo
 
 You can read more about MongoDB connection strings [here](https://www.mongodb.com/docs/manual/reference/connection-string/#std-label-connections-standard-connection-string-format) if you are interested.
 
+#### (Optional) Updating Your Application for MongoDB Atlas
+
+If you want to use MongoDB Atlas instead of local MongoDB, update your `.env` file.
+
+> ⚠️ **Important Network Notice:** MongoDB Atlas connections are blocked on the NUS network. If you are using MongoDB Atlas, you must disconnect from the NUS network (including NUS Wi-Fi or nVPN) and connect using an alternative network.
+
+Otherwise, your application will fail to connect to the database even if your connection string is correct.
+
+```env
+PORT=8080
+# Replace the local connection string with your Atlas connection string
+MONGODB_URI="mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/<database_name>?retryWrites=true&w=majority"
+```
+
+1. Replace `<username>` with the username you created (e.g `"dbUser"`)
+2. Replace `<password>` with the password you created
+3. Replace `<database_name>` with your database name (e.g `"addressbook"`)
+
+
 ### 3. Initialise the database and connect to it
 
-> ⚠️ **Warning:** This step will require you to have MongoDB server running on your computer, which should be the case if you followed the [Prerequisites](#Prerequisites) section and correctly followed the MongoDB installation guide for your OS. If not, please do it before continuing with the rest of this guide.
+> ⚠️ **Warning:** This step will require you to have MongoDB server running on your computer, which should be the case if you followed the [prerequisites](#Prerequisites) section and correctly followed the MongoDB installation guide for your OS. If not, please do it before continuing with the rest of this guide.
 
 You will need to create a folder called `config` under your `backend` directory. You can do so via your IDE or by executing the command `mkdir config`.
 
