@@ -1,8 +1,8 @@
-# CS3219 SE Toolbox: REST API with MongoDB
+# SDS Toolbox: REST API with MongoDB
 
 ## Introduction
 
-Welcome to CS3219! This guide will introduce you to REST APIs and how to implement them by walking you through the development of a full stack address book application with CRUD functionalities (similar to CS2103, but with Javascript instead of Java).
+Welcome to SDS! This guide will introduce you to REST APIs and how to implement them by walking you through the development of a full stack address book application with CRUD functionalities (similar to CS2103, but with Javascript instead of Java).
 
 ![Addressbook UI](images/addressbook.jpeg)
 
@@ -420,7 +420,7 @@ Then, add the following content to your `.env` file:
 
 ```env
 PORT=8080
-MONGODB_URI="mongodb://127.0.0.1:27017/cs3219-rest-api-example"
+MONGODB_URI="mongodb://127.0.0.1:27017/sds-rest-api-example"
 ```
 
 Here, you are specifying the connection string that can be used to connect to your database. The format for this connection string is `<standard_prefix>://<host>:<port>/<database_name>`. In this example:
