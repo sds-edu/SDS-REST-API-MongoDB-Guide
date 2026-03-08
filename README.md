@@ -264,7 +264,7 @@ Fork this starter repository to your own Github account, then open your terminal
 cd <path to directory of your choice>
 
 // clone the starter repository
-git clone https://github.com/<usernname>/SDS-Kit-REST-API-MongoDB
+git clone https://github.com/<usernname>/SDS-Kit-REST-API-MongoDB.git
 ```
 
 ### 2. Install the required dependencies
