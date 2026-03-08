@@ -255,7 +255,7 @@ The Atlas interface provides a user-friendly way to visualize your JSON document
 
 ### 1. Fork and clone the starter repository
 
-We have created a starter repository for this guide [here](https://github.com/CS3219-AY2324S1/SE-Toolbox-REST-API-MongoDB.git). This starter repository contains the code for the frontend of the application.
+We have created a starter repository for this guide: [SDS-Kit-REST-API-MongoDB](https://github.com/sds-edu/SDS-Kit-REST-API-MongoDB). This  repository contains the code for the frontend of the application.
 
 Fork this starter repository to your own Github account, then open your terminal and clone the forked repository into a directory of your choice.
 
@@ -264,7 +264,7 @@ Fork this starter repository to your own Github account, then open your terminal
 cd <path to directory of your choice>
 
 // clone the starter repository
-git clone https://github.com/<your github username>/SE-Toolbox-REST-API-MongoDB.git
+git clone https://github.com/<usernname>/SDS-Kit-REST-API-MongoDB
 ```
 
 ### 2. Install the required dependencies
