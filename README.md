@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to SDS! This guide will introduce you to REST APIs and how to implement them by walking you through the development of a full stack address book application with CRUD functionalities (similar to CS2103, but with Javascript instead of Java).
+Welcome to Software Design School (SDS)! This guide will introduce you to REST APIs and how to implement them by walking you through the development of a full stack address book application with CRUD functionalities (similar to CS2103, but with Javascript instead of Java).
 
 ![Addressbook UI](images/addressbook.jpeg)
 
