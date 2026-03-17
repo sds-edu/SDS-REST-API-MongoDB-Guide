@@ -1033,3 +1033,7 @@ Here are some of the resources that were used in the making of this guide. You m
 - [GeeksforGeeks: Document Format in MongoDB](https://www.geeksforgeeks.org/mongodb/what-is-the-format-of-document-in-mongodb/)
 - [MongoDB Data Modeling Manual](https://www.mongodb.com/docs/manual/data-modeling/)
 - [JSON and BSON in MongoDB](https://www.mongodb.com/json-and-bson)
+
+## AI Declaration
+
+Some parts of this guide were structured, formatted, and refined with the assistance of `Gemini-3-Pro` . The model was used to draft technical explanations and generate code snippets. All code snippets used in the guide and command sequences were reviewed, implemented, and tested by the teaching team to ensure accuracy and functionality.
