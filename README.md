@@ -328,21 +328,19 @@ You can install all these dependencies by executing these commands:
 
 ```sh
 // install Express.js locally
-npm i --save express
+npm install express
 
 // install dotenv locally
-npm i --save dontenv
+npm install dotenv
 
 // install cors locally
-npm i --save cors
+npm install cors
 
 // install nodemon locally as a development dependency
-npm i --save-dev nodemon
+npm install --save-dev nodemon
 ```
 
-In case of installation failures, you may replace the corresponding commands with `npm install` (e.g., `npm install dotenv`).
-
-> 📝 **Note:** You can read more about the differences between --save and --save-dev [here](https://www.geeksforgeeks.org/what-is-the-difference-between-save-and-save-dev-in-node-js/) if you are interested.
+> 📝 **Note:** Since npm v5, `npm install <package>` automatically saves it to `package.json` as a dependency, so the `--save` flag is no longer necessary (though it still works if you're used to typing it). The `--save-dev` flag is still required to save a package as a *development* dependency instead. You can read more about the differences between `--save` and `--save-dev` [here](https://www.geeksforgeeks.org/what-is-the-difference-between-save-and-save-dev-in-node-js/) if you are interested.
 
 ### 4. Set up Express.js server
 
