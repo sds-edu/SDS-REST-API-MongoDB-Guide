@@ -29,9 +29,11 @@ Please ensure that you have the following installed on your computer before cont
 
 1. Install [Node.js LTS](https://nodejs.org/en/download)
 
-    > 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is v24.13.0. If you have a different version of Node.js installed and need to change it, visit the [Node.js download page](https://nodejs.org/en/download), select your operating system, package manager, and Node.js version from the dropdowns at the top of the page, then follow the provided instructions.
+    > 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is v24.19.0. If you have a different version of Node.js installed and need to change it, visit the [Node.js download page](https://nodejs.org/en/download), select your operating system, package manager, and Node.js version from the dropdowns at the top of the page, then follow the provided instructions.
 
-2. Install [MongoDB Community Edition](https://www.mongodb.com/docs/manual/administration/install-community/) - Follow the installation guide for your OS
+2. Set up a MongoDB database — you can use **either** of the following (you only need one):
+    - [MongoDB Community Edition](https://www.mongodb.com/docs/manual/administration/install-community/) - installed locally on your computer. Follow the installation guide for your OS.
+    - [MongoDB Atlas](#setting-up-mongodb-atlas-cloud-database) - a free, cloud-hosted database that requires no local installation. See the [Setting up MongoDB Atlas](#setting-up-mongodb-atlas-cloud-database) section later in this guide for setup instructions.
 3. Install [Git](https://git-scm.com/downloads)
 4. Install [Postman App](https://www.postman.com/downloads/)
 5. Ensure you have an IDE of your choice installed (e.g. This guide was made using [VSCode](https://code.visualstudio.com/))
@@ -131,7 +133,9 @@ The schema is simple but demonstrates MongoDB's document structure:
 
 ## Setting up MongoDB Atlas (Cloud Database)
 
-While the main guide uses MongoDB Community Edition (local installation), MongoDB Atlas provides a cloud-based solution that's excellent for development and production use.
+This guide supports **either** a local MongoDB installation (Community Edition) **or** a cloud-hosted database via MongoDB Atlas — you only need to set up one of the two. While the main guide uses MongoDB Community Edition (local installation), MongoDB Atlas provides a cloud-based solution that's excellent for development and production use.
+
+> 💡 **Tip:** If you've already installed MongoDB Community Edition locally and don't want to set up a cloud-based database, you can skip this section entirely and jump ahead to [Setting up the Frontend](#setting-up-the-frontend).
 
 ### What is MongoDB Atlas?
 
@@ -157,15 +161,18 @@ MongoDB Atlas is a fully managed cloud database service that handles database op
 
 ![MongoDB Atlas Deployment Options](images/pic1.1.png)
 
-- **M0 (FREE)**: Perfect for learning and small applications
-- **M10 ($0.08/hour)**: For production applications
-- **SERVERLESS ($0.10/M reads)**: Pay-per-use model
+- **FREE**: Perfect for learning and small applications
+- **M10 ($0.09/hour)**: For production applications
+- **FLEX**: Pay-per-use model
 
 For this tutorial, select the **FREE** M0 option.
 
 #### Step 2: Configure Your Cluster
 
 1. **Provider & Region**: Choose your cloud provider (AWS, Google Cloud, or Azure) and select a region closest to your users
+
+    > 💡 **Tip:** It doesn't matter which cloud provider you pick for this guide — connecting via the Node.js driver works the same way regardless of provider, since you'll be connecting over the standard public `mongodb+srv://` connection string. Just pick whichever provider and region is most convenient for you.
+
 2. **Cluster Name**: Give your cluster a descriptive name (e.g., "Cluster0" or "AddressBookDB")
 3. (Optional) Keeping **“Automate security setup”** enabled automatically adds your current IP address to enable local connectivity.
 4. Click **"Create Deployment"** to deploy your cluster
