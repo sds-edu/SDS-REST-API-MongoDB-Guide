@@ -280,7 +280,7 @@ Now that you have cloned the starter repository, you will need to navigate to it
 
 ```sh
 // navigate to starter repository
-cd SE-Toolbox-REST-API-MongoDB
+cd SDS-Kit-REST-API-MongoDB
 
 // install dependencies
 npm install
@@ -562,7 +562,9 @@ Also, please ensure that MongoDB is running, and then from the `backend` directo
 npm run dev
 ```
 
-Note that this execution is different from the previous frontend execution. (In our case, the frontend listens to port 3000, and the backend listens to port 8080.)
+> 📝 **Note:** This execution is different from the previous frontend execution — the frontend listens on port 3000, while the backend listens on port 8080.
+
+> 💡 **Tip:** If you're using MongoDB Atlas, the connection may take a few seconds to establish. Wait until you see `MongoDB Connected: ####` in your terminal before proceeding.
 
 ### 1. `GET` - Fetch all addresses
 
@@ -662,7 +664,7 @@ app.use('/api/addresses', require('./routes/addressRoutes'))
 
 #### Test API route
 
-To test whether the endpoint works correctly, you can use Postman App to make a `GET` request to `localhost:8080/api/addresses/`
+To test whether the endpoint works correctly, you can use the Postman App to make a `GET` request to `localhost:8080/api/addresses/`
 
 The output should be as follows if there is no address object in the MongoDB database:
 
@@ -885,7 +887,14 @@ In this example, the ID we want to delete is `64c7dd52c95846d56c68e07e`. Note th
 
 ## Integrating with the Frontend
 
-> 📝 **Note:** For this section, you will be working in the root directory of the repository as you will be making changes in the frontend code. Make sure to navigate such that your working directory is `<directory of your choice>/SE-Toolbox-REST-API-MongoDB`.
+For this section, you will be making changes to the frontend code, so you must navigate out of the `backend` directory and back to the root of the repository before continuing:
+
+```sh
+// navigate out of the backend directory, back to the root of the repository
+cd ..
+```
+
+Your working directory should now be `<directory of your choice>/SDS-Kit-REST-API-MongoDB`. Do not proceed with the rest of this section until you have done so.
 
 You will need to install [axios](https://www.npmjs.com/package/axios), a useful tool that will allow you to make requests to the backend server. You can do so by executing the command
 
@@ -971,6 +980,8 @@ const onSubmit = async (data) => {
 </form>
 ```
 
+> 💡 **Tip:** This guide only provides the core request logic — it doesn't spell out the exact form field markup. If you get stuck, feel free to prompt an AI coding assistant (e.g., "add form fields for title and description to this InputButton component") to help you complete the integration.
+
 ### Update an existing address
 
 To update an existing address, you can define `handleEditAddress` function that makes a `PUT` request to `http://localhost:8080/api/addresses/:id`. This can be placed and integrated with `components/AddressCard.jsx`.
@@ -989,6 +1000,7 @@ const handleEditAddress = async (data) => {
 }
 ```
 
+> 💡 **Tip:** This snippet only covers the `handleEditAddress` function itself — it doesn't show how to wire it up to an edit form/button in `AddressCard.jsx`. You can prompt an AI coding assistant to help you integrate this handler into the component's UI.
 
 ### Delete an existing address
 
@@ -1011,6 +1023,39 @@ Here is an example of how`handleDeleteAddress` can be used when the user must co
 ```html
 <AlertDialogAction onClick={handleDeleteAddress}>Continue</AlertDialogAction>
 ```
+
+> 💡 **Tip:** As with the sections above, this only shows the core handler and a usage example — not the full confirmation dialog markup. Feel free to prompt an AI coding assistant to help you finish wiring this up in `AddressCard.jsx`.
+
+### Running the Full Stack
+
+Now that the frontend and backend are integrated, you'll need **both servers running at the same time** for the application to work end-to-end.
+
+`npm run dev` starts a long-running process that never exits on its own, so you can't chain the two with `&&` (which only starts the next command once the previous one finishes) — you'll need two separate terminals instead:
+
+**Terminal 1 (frontend — from the root of the repository):**
+
+```sh
+npm run dev
+```
+
+**Terminal 2 (backend — from the `backend` directory):**
+
+```sh
+cd backend
+npm run dev
+```
+
+> 💡 **Tip:** If you'd prefer a single command instead of two terminals, install [concurrently](https://www.npmjs.com/package/concurrently) in the root directory (`npm install --save-dev concurrently`) and add a script to the root `package.json`:
+>
+> ```json
+> "scripts": {
+>   "dev:all": "concurrently \"npm run dev\" \"npm run dev --prefix backend\""
+> }
+> ```
+>
+> Then run `npm run dev:all` to start both servers together.
+
+Once both servers are running, open <http://localhost:3000> in your browser to use the full application.
 
 ## References
 
