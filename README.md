@@ -29,9 +29,11 @@ Please ensure that you have the following installed on your computer before cont
 
 1. Install [Node.js LTS](https://nodejs.org/en/download)
 
-    > 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is v24.13.0. If you have a different version of Node.js installed and need to change it, visit the [Node.js download page](https://nodejs.org/en/download), select your operating system, package manager, and Node.js version from the dropdowns at the top of the page, then follow the provided instructions.
+    > 📝 **Note:** The LTS version of Node.js as of the time of writing this guide is v24.19.0. If you have a different version of Node.js installed and need to change it, visit the [Node.js download page](https://nodejs.org/en/download), select your operating system, package manager, and Node.js version from the dropdowns at the top of the page, then follow the provided instructions.
 
-2. Install [MongoDB Community Edition](https://www.mongodb.com/docs/manual/administration/install-community/) - Follow the installation guide for your OS
+2. Set up a MongoDB database — you can use **either** of the following (you only need one):
+    - [MongoDB Community Edition](https://www.mongodb.com/docs/manual/administration/install-community/) - installed locally on your computer. Follow the installation guide for your OS.
+    - [MongoDB Atlas](#setting-up-mongodb-atlas-cloud-database) - a free, cloud-hosted database that requires no local installation. See the [Setting up MongoDB Atlas](#setting-up-mongodb-atlas-cloud-database) section later in this guide for setup instructions.
 3. Install [Git](https://git-scm.com/downloads)
 4. Install [Postman App](https://www.postman.com/downloads/)
 5. Ensure you have an IDE of your choice installed (e.g. This guide was made using [VSCode](https://code.visualstudio.com/))
@@ -131,7 +133,9 @@ The schema is simple but demonstrates MongoDB's document structure:
 
 ## Setting up MongoDB Atlas (Cloud Database)
 
-While the main guide uses MongoDB Community Edition (local installation), MongoDB Atlas provides a cloud-based solution that's excellent for development and production use.
+This guide supports **either** a local MongoDB installation (Community Edition) **or** a cloud-hosted database via MongoDB Atlas — you only need to set up one of the two. While the main guide uses MongoDB Community Edition (local installation), MongoDB Atlas provides a cloud-based solution that's excellent for development and production use.
+
+> 💡 **Tip:** If you've already installed MongoDB Community Edition locally and don't want to set up a cloud-based database, you can skip this section entirely and jump ahead to [Setting up the Frontend](#setting-up-the-frontend).
 
 ### What is MongoDB Atlas?
 
@@ -157,15 +161,18 @@ MongoDB Atlas is a fully managed cloud database service that handles database op
 
 ![MongoDB Atlas Deployment Options](images/pic1.1.png)
 
-- **M0 (FREE)**: Perfect for learning and small applications
-- **M10 ($0.08/hour)**: For production applications
-- **SERVERLESS ($0.10/M reads)**: Pay-per-use model
+- **FREE**: Perfect for learning and small applications
+- **M10 ($0.09/hour)**: For production applications
+- **FLEX**: Pay-per-use model
 
 For this tutorial, select the **FREE** M0 option.
 
 #### Step 2: Configure Your Cluster
 
 1. **Provider & Region**: Choose your cloud provider (AWS, Google Cloud, or Azure) and select a region closest to your users
+
+    > 💡 **Tip:** It doesn't matter which cloud provider you pick for this guide — connecting via the Node.js driver works the same way regardless of provider, since you'll be connecting over the standard public `mongodb+srv://` connection string. Just pick whichever provider and region is most convenient for you.
+
 2. **Cluster Name**: Give your cluster a descriptive name (e.g., "Cluster0" or "AddressBookDB")
 3. (Optional) Keeping **“Automate security setup”** enabled automatically adds your current IP address to enable local connectivity.
 4. Click **"Create Deployment"** to deploy your cluster
@@ -273,7 +280,7 @@ Now that you have cloned the starter repository, you will need to navigate to it
 
 ```sh
 // navigate to starter repository
-cd SE-Toolbox-REST-API-MongoDB
+cd SDS-Kit-REST-API-MongoDB
 
 // install dependencies
 npm install
@@ -307,6 +314,20 @@ npm init
 
 > 💡**Tip:** `npm init` is an interactive command that will prompt you for some information. You can accept all the default arguments for this application.
 
+This guide uses the modern ES Module `import`/`export` syntax for the backend code (instead of the older CommonJS `require()`/`module.exports` syntax). To enable this, open the `package.json` file that was just created and add `"type": "module"` to it:
+
+```json
+package.json
+
+{
+  "name": "backend",
+  "type": "module",
+  // rest of the code ...
+}
+```
+
+> 📝 **Note:** Without this field, Node.js treats `.js` files as CommonJS by default, and using `import`/`export` syntax will throw a `SyntaxError`.
+
 ### 3. Install the required dependencies
 
 As mentioned earlier in the [Tech Stack](###Tech-Stack) section, you will be using Express.js for the backend of this application, so you will need to install it.
@@ -321,21 +342,19 @@ You can install all these dependencies by executing these commands:
 
 ```sh
 // install Express.js locally
-npm i --save express
+npm install express
 
 // install dotenv locally
-npm i --save dontenv
+npm install dotenv
 
 // install cors locally
-npm i --save cors
+npm install cors
 
 // install nodemon locally as a development dependency
-npm i --save-dev nodemon
+npm install --save-dev nodemon
 ```
 
-In case of installation failures, you may replace the corresponding commands with `npm install` (e.g., `npm install dotenv`).
-
-> 📝 **Note:** You can read more about the differences between --save and --save-dev [here](https://www.geeksforgeeks.org/what-is-the-difference-between-save-and-save-dev-in-node-js/) if you are interested.
+> 📝 **Note:** Since npm v5, `npm install <package>` automatically saves it to `package.json` as a dependency, so the `--save` flag is no longer necessary (though it still works if you're used to typing it). The `--save-dev` flag is still required to save a package as a *development* dependency instead. You can read more about the differences between `--save` and `--save-dev` [here](https://www.geeksforgeeks.org/what-is-the-difference-between-save-and-save-dev-in-node-js/) if you are interested.
 
 ### 4. Set up Express.js server
 
@@ -343,9 +362,9 @@ Create an `index.js` file in the `backend` directory and add the following lines
 
 ```js
 // import the dependencies required for Express.js
-const express = require('express')
+import express from 'express'
 // import the dependencies required for cors
-const cors = require('cors')
+import cors from 'cors'
 
 // initialize the Express.js application
 // store it in the app variable
@@ -378,7 +397,7 @@ app.get('/', (req, res) => {
 })
 
 // export Express.js application to be used elsewhere
-module.exports = app
+export default app
 ```
 
 ### 5. Start up the backend
@@ -468,7 +487,7 @@ In your `db.js` file, add the following code. Again, make sure to read the inlin
 
 ```js
 // import dependencies required for mongoose
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 // function to start up and connect to MongoDB database
 const connectDB = async () => {
@@ -483,7 +502,7 @@ const connectDB = async () => {
 }
 
 // export connection function to be used in index.js
-module.exports = connectDB
+export default connectDB
 ```
 
 Now, you will need to make use of this `connectDB` function in the backend entrypoint `index.js`. Make the following changes to `index.js` to connect to the MongoDB database when starting up the backend server:
@@ -494,10 +513,10 @@ Now, you will need to make use of this `connectDB` function in the backend entry
 // ADD the following code:
 
 // import the dependencies required for dotenv
-// the config() function allows for reading of the .env file
-const dotenv = require('dotenv').config()
+// this automatically reads and loads the .env file
+import 'dotenv/config'
 // import the connectDB function created earlier
-const connectDB = require('./config/db')
+import connectDB from './config/db.js'
 
 // initialize connection to MongoDB database
 connectDB()
@@ -555,7 +574,9 @@ Also, please ensure that MongoDB is running, and then from the `backend` directo
 npm run dev
 ```
 
-Note that this execution is different from the previous frontend execution. (In our case, the frontend listens to port 3000, and the backend listens to port 8080.)
+> 📝 **Note:** This execution is different from the previous frontend execution — the frontend listens on port 3000, while the backend listens on port 8080.
+
+> 💡 **Tip:** If you're using MongoDB Atlas, the connection may take a few seconds to establish. Wait until you see `MongoDB Connected: ####` in your terminal before proceeding.
 
 ### 1. `GET` - Fetch all addresses
 
@@ -564,7 +585,7 @@ Note that this execution is different from the previous frontend execution. (In 
 In the `models` directory, create `addressModel.js` with the following content:
 
 ```js
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const addressSchema = mongoose.Schema({
   title: {
@@ -578,7 +599,7 @@ const addressSchema = mongoose.Schema({
 })
 
 // export Address model to be used in controller
-module.exports = mongoose.model('Address', addressSchema)
+export default mongoose.model('Address', addressSchema)
 ```
 
 #### Define `fetchAllAddresses` function
@@ -587,7 +608,7 @@ In the `controllers` directory, create `addressController.js`. Here, you will de
 
 ```js
 // import Address model
-const Address = require('../models/addressModel')
+import Address from '../models/addressModel.js'
 
 // @desc    Fetch all addresses
 // @route   GET /api/addresses
@@ -602,7 +623,7 @@ const fetchAllAddresses = async (req, res) => {
 }
 
 // export controller functions to be used in corresponding route
-module.exports = { fetchAllAddresses }
+export { fetchAllAddresses }
 ```
 
 #### Define API route
@@ -612,23 +633,32 @@ Your api endpoints for addresses will look something like this: `/api/addresses/
 In the `routes` directory, create `addressRoutes.js`, this is where we will define the specific endpoints.
 
 ```js
-const express = require('express')
+import express from 'express'
 const router = express.Router()
 
-const { fetchAllAddresses } = require('../controllers/addressController')
+import { fetchAllAddresses } from '../controllers/addressController.js'
 
 // call the fetchAllAddresses function
 // when a GET request is made to http://localhost:8080/api/addresses/
 router.route('/').get(fetchAllAddresses)
 
-module.exports = router
+export default router
 ```
 
 Then, you can add the following to `index.js` to connect the newly created address router:
 
 ```js
 /**
- * Import required dependencies, connect db and initialize Express.js application ... (same as before). i.e. same up to:
+ * Import required dependencies ... (same as before). i.e. same up to:
+ * import connectDB from './config/db.js'
+ **/
+
+// ADD the following import alongside your other imports at the top of the file:
+import addressRoutes from './routes/addressRoutes.js'
+
+/**
+ * initialize connection to MongoDB database, initialize Express.js application,
+ * and allow cross-origin requests ... (same as before). i.e. same up to:
  * app.use(cors())
  **/
 
@@ -648,14 +678,16 @@ app.use(express.urlencoded({ extended: false }))
 
 // use the address router to handle requests
 // at http://localhost:8080/api/addresses
-app.use('/api/addresses', require('./routes/addressRoutes'))
+app.use('/api/addresses', addressRoutes)
 
 /** rest of the code ... (same as before) **/
 ```
 
+> 📝 **Note:** Unlike `require()`, `import` statements must be placed at the top of the file (they can't be called conditionally or inline), so the import for `addressRoutes` is added alongside your other imports rather than directly above the `app.use('/api/addresses', ...)` line.
+
 #### Test API route
 
-To test whether the endpoint works correctly, you can use Postman App to make a `GET` request to `localhost:8080/api/addresses/`
+To test whether the endpoint works correctly, you can use the Postman App to make a `GET` request to `localhost:8080/api/addresses/`
 
 The output should be as follows if there is no address object in the MongoDB database:
 
@@ -707,7 +739,7 @@ const addAddress = async (req, res) => {
 
 // Update the code line below
 // export controller functions to be used in corresponding route
-module.exports = { fetchAllAddresses, addAddress }
+export { fetchAllAddresses, addAddress }
 ```
 
 #### Define API route
@@ -718,7 +750,7 @@ In `addressRoutes.js`, define another route as follows.
 // rest of the code ...
 
 //Update the code line below
-const { fetchAllAddresses, addAddress } = require('../controllers/addressController')
+import { fetchAllAddresses, addAddress } from '../controllers/addressController.js'
 
 // rest of the code ...
 
@@ -785,7 +817,7 @@ const updateAddress = async (req, res) => {
 
 // Update the code line below
 // export controller functions to be used in corresponding route
-module.exports = { fetchAllAddresses, addAddress, updateAddress }
+export { fetchAllAddresses, addAddress, updateAddress }
 ```
 
 #### Define API route
@@ -796,7 +828,7 @@ In `addressRoutes.js`, define another route as follows.
 // rest of the code ...
 
 //Update the code line below
-const { fetchAllAddresses, addAddress, updateAddress } = require('../controllers/addressController')
+import { fetchAllAddresses, addAddress, updateAddress } from '../controllers/addressController.js'
 
 // rest of the code ...
 
@@ -846,7 +878,7 @@ const deleteAddress = async (req, res) => {
 
 // Update the code line below
 // export controller functions to be used in corresponding route
-module.exports = { fetchAllAddresses, addAddress, updateAddress, deleteAddress }
+export { fetchAllAddresses, addAddress, updateAddress, deleteAddress }
 ```
 
 #### Define API route
@@ -857,7 +889,7 @@ In `addressRoutes.js`, define another route as follows.
 // rest of the code ...
 
 // Update the code line below
-const { fetchAllAddresses, addAddress, updateAddress, deleteAddress } = require('../controllers/addressController')
+import { fetchAllAddresses, addAddress, updateAddress, deleteAddress } from '../controllers/addressController.js'
 
 // rest of the code ...
 
@@ -878,7 +910,14 @@ In this example, the ID we want to delete is `64c7dd52c95846d56c68e07e`. Note th
 
 ## Integrating with the Frontend
 
-> 📝 **Note:** For this section, you will be working in the root directory of the repository as you will be making changes in the frontend code. Make sure to navigate such that your working directory is `<directory of your choice>/SE-Toolbox-REST-API-MongoDB`.
+For this section, you will be making changes to the frontend code, so you must navigate out of the `backend` directory and back to the root of the repository before continuing:
+
+```sh
+// navigate out of the backend directory, back to the root of the repository
+cd ..
+```
+
+Your working directory should now be `<directory of your choice>/SDS-Kit-REST-API-MongoDB`. Do not proceed with the rest of this section until you have done so.
 
 You will need to install [axios](https://www.npmjs.com/package/axios), a useful tool that will allow you to make requests to the backend server. You can do so by executing the command
 
@@ -964,6 +1003,8 @@ const onSubmit = async (data) => {
 </form>
 ```
 
+> 💡 **Tip:** This guide only provides the core request logic — it doesn't spell out the exact form field markup. If you get stuck, feel free to prompt an AI coding assistant (e.g., "add form fields for title and description to this InputButton component") to help you complete the integration.
+
 ### Update an existing address
 
 To update an existing address, you can define `handleEditAddress` function that makes a `PUT` request to `http://localhost:8080/api/addresses/:id`. This can be placed and integrated with `components/AddressCard.jsx`.
@@ -982,6 +1023,7 @@ const handleEditAddress = async (data) => {
 }
 ```
 
+> 💡 **Tip:** This snippet only covers the `handleEditAddress` function itself — it doesn't show how to wire it up to an edit form/button in `AddressCard.jsx`. You can prompt an AI coding assistant to help you integrate this handler into the component's UI.
 
 ### Delete an existing address
 
@@ -1004,6 +1046,39 @@ Here is an example of how`handleDeleteAddress` can be used when the user must co
 ```html
 <AlertDialogAction onClick={handleDeleteAddress}>Continue</AlertDialogAction>
 ```
+
+> 💡 **Tip:** As with the sections above, this only shows the core handler and a usage example — not the full confirmation dialog markup. Feel free to prompt an AI coding assistant to help you finish wiring this up in `AddressCard.jsx`.
+
+### Running the Full Stack
+
+Now that the frontend and backend are integrated, you'll need **both servers running at the same time** for the application to work end-to-end.
+
+`npm run dev` starts a long-running process that never exits on its own, so you can't chain the two with `&&` (which only starts the next command once the previous one finishes) — you'll need two separate terminals instead:
+
+**Terminal 1 (frontend — from the root of the repository):**
+
+```sh
+npm run dev
+```
+
+**Terminal 2 (backend — from the `backend` directory):**
+
+```sh
+cd backend
+npm run dev
+```
+
+> 💡 **Tip:** If you'd prefer a single command instead of two terminals, install [concurrently](https://www.npmjs.com/package/concurrently) in the root directory (`npm install --save-dev concurrently`) and add a script to the root `package.json`:
+>
+> ```json
+> "scripts": {
+>   "dev:all": "concurrently \"npm run dev\" \"npm run dev --prefix backend\""
+> }
+> ```
+>
+> Then run `npm run dev:all` to start both servers together.
+
+Once both servers are running, open <http://localhost:3000> in your browser to use the full application.
 
 ## References
 
